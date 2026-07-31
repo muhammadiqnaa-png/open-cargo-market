@@ -54,7 +54,7 @@ export default function Home() {
       <div className="bg-blue-700 text-white py-10 shadow-lg">
 
         <h1 className="text-center text-4xl font-bold">
-          🚢 OPEN CARGO MARKET
+          🚢 MARKET MAESTRO
         </h1>
 
         <p className="mt-3 text-center text-blue-100">
