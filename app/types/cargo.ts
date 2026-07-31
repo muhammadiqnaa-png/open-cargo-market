@@ -1,10 +1,13 @@
 export interface Cargo {
-  id: string;
-  status: string;
-  cargo: string;
-  size: string;
-  area: string;
-  pol: string;
-  pod: string;
-  distance: string;
+  ID: string;
+  STATUS: string;
+  CARGO: string;
+  SIZE: string;
+  AREA: string;
+  POL: string;
+  POD: string;
+  DISTANCE: string;
+  ROUTE: string;
+  DETAIL: string;
+  INQUIRY: string;
 }
