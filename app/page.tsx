@@ -25,6 +25,8 @@ export default function Home() {
 
   const [areaFilter, setAreaFilter] = useState("ALL");
   const [cargoFilter, setCargoFilter] = useState("ALL");
+  const [sizeFilter, setSizeFilter] = useState("ALL");
+  const [statusFilter, setStatusFilter] = useState("ALL");
 
   useEffect(() => {
     fetch("/api/cargo")
@@ -50,7 +52,19 @@ export default function Home() {
     const matchCargo =
       cargoFilter === "ALL" || item.CARGO === cargoFilter;
 
-    return matchSearch && matchArea && matchCargo;
+    const matchSize =
+      sizeFilter === "ALL" || item.SIZE === sizeFilter;
+
+    const matchStatus =
+      statusFilter === "ALL" || item.STATUS === statusFilter;
+
+    return (
+      matchSearch &&
+      matchArea &&
+      matchCargo &&
+      matchSize &&
+      matchStatus
+    );
   });
 
   return (
@@ -106,27 +120,41 @@ export default function Home() {
           >
             <option value="ALL">🚢 Cargo</option>
 
-            {[...new Set(cargo.map((item) => item.CARGO))].map((cargo) => (
-              <option key={cargo} value={cargo}>
-                {cargo}
+            {[...new Set(cargo.map((item) => item.CARGO))].map((cargoType) => (
+              <option key={cargoType} value={cargoType}>
+                {cargoType}
               </option>
             ))}
           </select>
 
           {/* SIZE */}
           <select
-            disabled
-            className="rounded-xl border border-gray-300 bg-gray-100 p-3 text-sm font-medium text-gray-400"
+            value={sizeFilter}
+            onChange={(e) => setSizeFilter(e.target.value)}
+            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
           >
-            <option>📏 Size</option>
+            <option value="ALL">📏 Size</option>
+
+            {[...new Set(cargo.map((item) => item.SIZE))].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
           </select>
 
           {/* STATUS */}
           <select
-            disabled
-            className="rounded-xl border border-gray-300 bg-gray-100 p-3 text-sm font-medium text-gray-400"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
           >
-            <option>📋 Status</option>
+            <option value="ALL">📋 Status</option>
+
+            {[...new Set(cargo.map((item) => item.STATUS))].map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
           </select>
 
         </div>
