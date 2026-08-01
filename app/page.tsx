@@ -20,7 +20,10 @@ type Cargo = {
 export default function Home() {
   const [cargo, setCargo] = useState<Cargo[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState("");
+
+  const [areaFilter, setAreaFilter] = useState("ALL");
   const [cargoFilter, setCargoFilter] = useState("ALL");
 
   useEffect(() => {
@@ -41,17 +44,20 @@ export default function Home() {
       item.POD?.toLowerCase().includes(keyword) ||
       item.AREA?.toLowerCase().includes(keyword);
 
+    const matchArea =
+      areaFilter === "ALL" || item.AREA === areaFilter;
+
     const matchCargo =
       cargoFilter === "ALL" || item.CARGO === cargoFilter;
 
-    return matchSearch && matchCargo;
+    return matchSearch && matchArea && matchCargo;
   });
 
   return (
     <main className="min-h-screen bg-gray-100">
 
       {/* Header */}
-      <div className="bg-blue-700 text-white py-10 shadow-lg">
+      <div className="bg-blue-700 py-10 text-white shadow-lg">
 
         <h1 className="text-center text-4xl font-bold">
           🚢 MARKET MAESTRO
@@ -63,7 +69,7 @@ export default function Home() {
 
       </div>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="mx-auto max-w-7xl p-6">
 
         {/* Search */}
         <input
@@ -71,16 +77,34 @@ export default function Home() {
           placeholder="🔍 Search Cargo, POL, POD, Area..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="mb-8 w-full rounded-xl border border-gray-300 bg-white p-4 text-lg outline-none focus:ring-2 focus:ring-blue-600"
+          className="mb-6 w-full rounded-xl border border-gray-300 bg-white p-4 text-lg outline-none focus:ring-2 focus:ring-blue-600"
         />
 
-        <div className="mb-8">
+        {/* FILTER */}
+        <div className="mb-8 grid grid-cols-4 gap-2">
+
+          {/* AREA */}
+          <select
+            value={areaFilter}
+            onChange={(e) => setAreaFilter(e.target.value)}
+            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
+          >
+            <option value="ALL">🌍 Area</option>
+
+            {[...new Set(cargo.map((item) => item.AREA))].map((area) => (
+              <option key={area} value={area}>
+                {area}
+              </option>
+            ))}
+          </select>
+
+          {/* CARGO */}
           <select
             value={cargoFilter}
             onChange={(e) => setCargoFilter(e.target.value)}
-            className="w-full rounded-xl border border-gray-300 bg-white p-4"
+            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
           >
-            <option value="ALL">Semua Cargo</option>
+            <option value="ALL">🚢 Cargo</option>
 
             {[...new Set(cargo.map((item) => item.CARGO))].map((cargo) => (
               <option key={cargo} value={cargo}>
@@ -88,6 +112,23 @@ export default function Home() {
               </option>
             ))}
           </select>
+
+          {/* SIZE */}
+          <select
+            disabled
+            className="rounded-xl border border-gray-300 bg-gray-100 p-3 text-sm font-medium text-gray-400"
+          >
+            <option>📏 Size</option>
+          </select>
+
+          {/* STATUS */}
+          <select
+            disabled
+            className="rounded-xl border border-gray-300 bg-gray-100 p-3 text-sm font-medium text-gray-400"
+          >
+            <option>📋 Status</option>
+          </select>
+
         </div>
 
         {/* Loading */}
