@@ -1,4 +1,5 @@
 import Link from "next/link";
+
 type Cargo = {
   ID: string;
   STATUS: string;
@@ -19,43 +20,40 @@ type Props = {
 
 export default function CargoCard({ item }: Props) {
   return (
-    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden">
+    <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm transition hover:shadow-md">
 
-      <div className="bg-blue-700 text-white px-5 py-3 flex justify-between items-center">
-        <span className="font-semibold">{item.STATUS}</span>
-        <span className="font-bold">{item.SIZE}</span>
-      </div>
+      <div className="grid grid-cols-12 items-center gap-4">
 
-      <div className="p-5">
-
-        <h2 className="text-2xl font-bold text-gray-800">
-          {item.CARGO}
-        </h2>
-
-        <div className="mt-5 space-y-2 text-gray-600">
-
-          <p>📍 <strong>POL</strong> : {item.POL}</p>
-
-          <div className="text-center text-2xl">
-            ↓
-          </div>
-
-          <p>📍 <strong>POD</strong> : {item.POD}</p>
-
-          <hr />
-
-          <p>📐 {item.DISTANCE}</p>
-
-          <p>🌍 {item.AREA}</p>
-
+        {/* Cargo */}
+        <div className="col-span-3">
+          <p className="text-lg font-bold text-gray-800">
+            {item.CARGO}
+          </p>
         </div>
 
-        <Link
+        {/* Route */}
+        <div className="col-span-5">
+          <p className="text-gray-700 font-medium">
+            {item.POL} <span className="mx-2">→</span> {item.POD}
+          </p>
+        </div>
+
+        {/* Size */}
+        <div className="col-span-2 text-center">
+          <span className="rounded-lg bg-blue-100 px-3 py-2 font-semibold text-blue-700">
+            {item.SIZE}
+          </span>
+        </div>
+
+        {/* Detail */}
+        <div className="col-span-2 text-right">
+          <Link
             href={`/cargo/${item.ID}`}
-            className="mt-6 block w-full rounded-xl bg-blue-700 py-3 text-center text-white font-semibold hover:bg-blue-800 transition"
-        >
-            🔍 View Detail
-        </Link>
+            className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
+          >
+            Detail
+          </Link>
+        </div>
 
       </div>
 

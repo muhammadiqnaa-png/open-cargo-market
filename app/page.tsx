@@ -170,10 +170,41 @@ export default function Home() {
               Total Cargo : <strong>{filteredCargo.length}</strong>
             </p>
 
-            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {filteredCargo.map((item, index) => (
-                <CargoCard key={index} item={item} />
-              ))}
+            <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg">
+
+              {/* Header */}
+              <div className="grid grid-cols-12 items-center bg-blue-700 px-5 py-4 text-sm font-bold text-white">
+
+                <div className="col-span-3">
+                  Cargo
+                </div>
+
+                <div className="col-span-5">
+                  Route
+                </div>
+
+                <div className="col-span-2 text-center">
+                  Size
+                </div>
+
+                <div className="col-span-2 text-center">
+                  Detail
+                </div>
+
+              </div>
+
+              {/* List Cargo */}
+              <div className="divide-y divide-gray-200">
+
+                {filteredCargo.map((item) => (
+                  <CargoCard
+                    key={item.ID}
+                    item={item}
+                  />
+                ))}
+
+              </div>
+
             </div>
           </>
         )}
