@@ -175,11 +175,11 @@ export default function Home() {
               {/* Header */}
               <div className="grid grid-cols-12 items-center bg-blue-700 px-5 py-4 text-sm font-bold text-white">
 
-                <div className="col-span-3">
+                <div className="col-span-3 text-center">
                   Cargo
                 </div>
 
-                <div className="col-span-5">
+                <div className="col-span-5 text-center">
                   Route
                 </div>
 

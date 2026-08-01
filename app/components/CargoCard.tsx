@@ -25,7 +25,7 @@ export default function CargoCard({ item }: Props) {
       <div className="grid grid-cols-12 items-center gap-4">
 
         {/* Cargo */}
-        <div className="col-span-3">
+        <div className="col-span-3 text-center">
           <p className="text-lg font-bold text-gray-800">
             {item.CARGO}
           </p>
@@ -46,7 +46,7 @@ export default function CargoCard({ item }: Props) {
         </div>
 
         {/* Detail */}
-        <div className="col-span-2 text-right">
+        <div className="col-span-2 text-center">
           <Link
             href={`/cargo/${item.ID}`}
             className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
