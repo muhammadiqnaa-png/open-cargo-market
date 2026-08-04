@@ -7,6 +7,7 @@ export interface Cargo {
   POL: string;
   POD: string;
   DISTANCE: string;
+  LAYCAN: string;
   ROUTE: string;
   DETAIL: string;
   INQUIRY: string;

@@ -12,14 +12,12 @@ export default async function CargoDetail({ params }: Props) {
 
   const cargo = await getCargoData();
 
-  const item = cargo.find((c) => c.ID === id);
+  const item = cargo.find((c: any) => c.ID === id);
 
   if (!item) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <h1 className="text-2xl font-bold">
-          Cargo Tidak Ditemukan
-        </h1>
+      <main className="min-h-screen flex items-center justify-center bg-gray-100">
+        <h1 className="text-2xl font-bold">Cargo Tidak Ditemukan</h1>
       </main>
     );
   }
@@ -32,67 +30,104 @@ Cargo : ${item.CARGO}
 Size : ${item.SIZE}
 POL : ${item.POL}
 POD : ${item.POD}
+Laycan : ${item.LAYCAN}
 
 Can you provide more information?
 
 Thank you.`);
 
   return (
-    <main className="min-h-screen bg-gray-100 py-10 px-4">
+    <main className="min-h-screen bg-gray-100 py-8 px-4">
 
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+      <div className="mx-auto max-w-3xl">
 
-        <div className="flex justify-between items-center mb-6">
+        {/* Back */}
+        <Link
+          href="/"
+          className="mb-6 inline-block text-blue-600 font-semibold hover:underline"
+        >
+          ← Back to Cargo List
+        </Link>
 
-          <h1 className="text-3xl font-bold">
-            🚢 OPEN CARGO
-          </h1>
+        {/* Card */}
+        <div className="rounded-2xl bg-white shadow-lg border border-gray-200 p-8">
 
-          <span className="bg-green-600 text-white px-4 py-2 rounded-full">
-            {item.STATUS}
-          </span>
+          {/* Header */}
+          <div className="space-y-3">
 
-        </div>
+            <p>
+              <span className="font-semibold">📋 Status :</span>{" "}
+              <span className="rounded-full bg-green-100 px-3 py-1 text-green-700 font-semibold">
+                {item.STATUS}
+              </span>
+            </p>
 
-        <hr className="mb-6"/>
+            <p>
+              <strong>🌍 Area :</strong> {item.AREA}
+            </p>
 
-        <div className="space-y-4 text-lg">
+            <p>
+              <strong>📍 Route :</strong> {item.POL} → {item.POD}
+            </p>
 
-          <p><strong>🚢 Cargo :</strong> {item.CARGO}</p>
-
-          <p><strong>📏 Size :</strong> {item.SIZE}</p>
-
-          <p><strong>🌍 Area :</strong> {item.AREA}</p>
-
-          <p><strong>📍 POL :</strong> {item.POL}</p>
-
-          <p><strong>📍 POD :</strong> {item.POD}</p>
-
-          <p><strong>📐 Distance :</strong> {item.DISTANCE}</p>
-
-          <p><strong>🛣 Route :</strong> {item.ROUTE}</p>
-
-          <div>
-            <strong>📄 Detail :</strong>
-
-            <div className="mt-2 rounded-xl bg-gray-100 p-4 whitespace-pre-line">
-              {item.DETAIL}
-            </div>
           </div>
 
+          <hr className="my-6" />
+
+          {/* Information */}
+          <h2 className="mb-5 text-xl font-bold">
+            📊 INFORMATION
+          </h2>
+
+          <div className="space-y-4">
+
+            <p>
+              <strong>🚢 Cargo :</strong> {item.CARGO} ({item.SIZE})
+            </p>
+
+            <p>
+              <strong>📍 POL :</strong> {item.POL}
+            </p>
+
+            <p>
+              <strong>📍 POD :</strong> {item.POD}
+            </p>
+
+            <p>
+              <strong>📏 Distance :</strong> {item.DISTANCE}
+            </p>
+
+            <p>
+              <strong>📅 Laycan :</strong> {item.LAYCAN}
+            </p>
+
+            <p>
+              <strong>💰 Freight :</strong>{" "}
+              <span className="text-blue-600 font-semibold">
+                Contact via WhatsApp
+              </span>
+            </p>
+
+          </div>
+
+          <hr className="my-6" />
+
+          {/* Description */}
+          <h2 className="mb-4 text-xl font-bold">
+            📝 DESCRIPTION
+          </h2>
+
+          <div className="rounded-xl bg-gray-50 border border-gray-200 p-5 whitespace-pre-line leading-7">
+            {item.DETAIL}
+          </div>
+
+          {/* Button */}
           <Link
             href={`https://wa.me/${item.INQUIRY}?text=${whatsappMessage}`}
             target="_blank"
-            className="block w-full rounded-xl bg-green-600 py-4 text-center text-lg font-semibold text-white hover:bg-green-700"
+            className="mt-8 block w-full rounded-xl bg-green-600 py-4 text-center text-lg font-semibold text-white transition hover:bg-green-700"
           >
-            📩 Inquiry via WhatsApp
-          </Link>
-
-          <Link
-            href="/"
-            className="block w-full rounded-xl bg-blue-600 py-4 text-center text-lg font-semibold text-white hover:bg-blue-700"
-          >
-            ← Kembali ke Home
+            📲 Inquiry via WhatsApp
           </Link>
 
         </div>
