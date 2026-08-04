@@ -24,17 +24,22 @@ export default async function CargoDetail({ params }: Props) {
 
   const whatsappMessage = encodeURIComponent(`Hello,
 
-I'm interested in the following cargo.
+  I'm interested in the following cargo:
 
-Cargo : ${item.CARGO}
-Size : ${item.SIZE}
-POL : ${item.POL}
-POD : ${item.POD}
-Laycan : ${item.LAYCAN}
+  ━━━━━━━━━━━━━━━━━━━━━━
+  Cargo     : ${item.CARGO}
+  Route     : ${item.POL} → ${item.POD}
+  Size      : ${item.SIZE}
+  Laycan    : ${item.LAYCAN}
+  ━━━━━━━━━━━━━━━━━━━━━━
 
-Can you provide more information?
+  Please send me:
 
-Thank you.`);
+  • Freight Offer
+  • Payment Terms
+  • Cargo Availability
+
+  Thank you.`);
 
   return (
     <main className="min-h-screen bg-gray-100 py-8 px-4">
