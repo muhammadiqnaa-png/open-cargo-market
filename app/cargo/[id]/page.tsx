@@ -26,12 +26,12 @@ export default async function CargoDetail({ params }: Props) {
 
   I'm interested in the following cargo:
 
-  ━━━━━━━━━━━━━━━━━━━━━━
+  ━━━━━━━━━━━━━
+  Size      : ${item.SIZE}
   Cargo     : ${item.CARGO}
   Route     : ${item.POL} → ${item.POD}
-  Size      : ${item.SIZE}
   Laycan    : ${item.LAYCAN}
-  ━━━━━━━━━━━━━━━━━━━━━━
+  ━━━━━━━━━━━━━━
 
   Please send me:
 

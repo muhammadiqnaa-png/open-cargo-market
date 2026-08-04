@@ -71,37 +71,104 @@ export default function Home() {
     <main className="min-h-screen bg-gray-100">
 
       {/* Header */}
-      <div className="bg-blue-700 py-10 text-white shadow-lg">
+      <div className="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-lg">
 
-        <h1 className="text-center text-4xl font-bold">
-          🚢 MARKET MAESTRO
-        </h1>
+        <div className="mx-auto max-w-7xl px-6 py-14">
 
-        <p className="mt-3 text-center text-blue-100">
-          Find Available Cargo All Over Indonesia
-        </p>
+          <h1 className="text-center text-4xl font-extrabold tracking-wide md:text-6xl">
+            🚢 MARKET MAESTRO
+          </h1>
+
+          <p className="mt-4 text-center text-xl font-semibold text-blue-100">
+            Indonesia's Digital Shipping Marketplace
+          </p>
+
+          <p className="mx-auto mt-4 max-w-3xl text-center text-blue-100 leading-8">
+            Find available cargo quickly and connect directly with cargo owners
+            across Indonesia.
+          </p>
+
+        <div className="mt-10 grid grid-cols-3 gap-4 md:gap-6">
+
+          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
+            <div className="text-4xl">🚢</div>
+            <div className="mt-3 text-4xl font-extrabold">
+              {filteredCargo.length}
+            </div>
+            <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-blue-100">
+              Available Shipment
+            </div>
+            <div className="mt-4 inline-flex rounded-full bg-green-500/20 px-3 py-1 text-xs font-semibold text-green-200"></div>
+              ● Live
+          </div>
+          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
+            <div className="text-4xl">🌍</div>
+            <div className="mt-3 text-4xl font-extrabold">
+              {[...new Set(cargo.map(item => item.AREA))].length}
+            </div>
+            <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-blue-100">
+              Operating Area
+            </div>
+            <div className="mt-4 inline-flex rounded-full bg-blue-500/20 px-3 py-1 text-xs font-semibold text-blue-200"></div>
+              Indonesia
+            </div>
+
+          <div className="rounded-2xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
+            <div className="text-4xl">📍</div>
+            <div className="mt-3 text-4xl font-extrabold">
+              {[
+                ...new Set(
+                  cargo.flatMap(item => [item.POL, item.POD])
+                )
+              ].length}
+            </div>
+            <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-blue-100">
+              Ports
+            </div>
+            <div className="mt-4 inline-flex rounded-full bg-orange-500/20 px-3 py-1 text-xs font-semibold text-orange-200"></div>
+              Updated Daily
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
       <div className="mx-auto max-w-7xl p-6">
 
         {/* Search */}
-        <input
-          type="text"
-          placeholder="🔍 Search Cargo, POL, POD, Area..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="mb-6 w-full rounded-xl border border-gray-300 bg-white p-4 text-lg outline-none focus:ring-2 focus:ring-blue-600"
-        />
+        <div className="mb-8 rounded-2xl bg-white p-3 shadow-lg">
+
+          <div className="flex items-center">
+
+            <span className="px-3 text-2xl">
+              🔍
+            </span>
+
+            <input
+              type="text"
+              placeholder="Search Cargo, POL, POD, Area or Route..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-transparent p-3 text-lg outline-none"
+            />
+
+          </div>
+
+        </div>
 
         {/* FILTER */}
-        <div className="mb-8 grid grid-cols-4 gap-2">
+        <div className="mb-8 rounded-2xl bg-white p-4 shadow-lg">
+
+          <div className="grid grid-cols-4 gap-3">
+
 
           {/* AREA */}
           <select
             value={areaFilter}
             onChange={(e) => setAreaFilter(e.target.value)}
-            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
+            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
           >
             <option value="ALL">🌍 Area</option>
 
@@ -116,7 +183,7 @@ export default function Home() {
           <select
             value={cargoFilter}
             onChange={(e) => setCargoFilter(e.target.value)}
-            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
+            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
           >
             <option value="ALL">🚢 Cargo</option>
 
@@ -131,7 +198,7 @@ export default function Home() {
           <select
             value={sizeFilter}
             onChange={(e) => setSizeFilter(e.target.value)}
-            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
+            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
           >
             <option value="ALL">📏 Size</option>
 
@@ -146,7 +213,7 @@ export default function Home() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="rounded-xl border border-gray-300 bg-white p-3 text-sm font-medium"
+            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
           >
             <option value="ALL">📋 Status</option>
 
@@ -158,6 +225,7 @@ export default function Home() {
           </select>
 
         </div>
+      </div> 
 
         {/* Loading */}
         {loading ? (
@@ -173,22 +241,22 @@ export default function Home() {
             <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg">
 
               {/* Header */}
-              <div className="grid grid-cols-12 items-center bg-blue-700 px-5 py-4 text-sm font-bold text-white">
+              <div className="grid grid-cols-12 items-center border-b border-blue-700 bg-gradient-to-r from-blue-800 to-blue-600 px-6 py-5 text-sm font-bold uppercase tracking-wider text-white">
 
                 <div className="col-span-3 text-center">
-                  Cargo
+                  📦 Cargo
                 </div>
 
                 <div className="col-span-5 text-center">
-                  Route
+                  📍 Route
                 </div>
 
                 <div className="col-span-2 text-center">
-                  Size
+                  🚢 Size
                 </div>
 
                 <div className="col-span-2 text-center">
-                  Detail
+                  👁️ Detail
                 </div>
 
               </div>
