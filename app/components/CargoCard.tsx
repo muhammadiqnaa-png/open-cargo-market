@@ -20,40 +20,52 @@ type Props = {
 
 export default function CargoCard({ item }: Props) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm transition hover:shadow-md">
+    <div className="rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
 
-      <div className="grid grid-cols-12 items-center gap-4">
+      {/* Header Biru */}
+      <div className="h-2 rounded-t-2xl bg-[#0F4C81]"></div>
 
-        {/* Cargo */}
-        <div className="col-span-3 text-center">
-          <p className="text-lg font-bold text-gray-800">
-            {item.CARGO}
-          </p>
-        </div>
-
-        {/* Route */}
-        <div className="col-span-5">
-          <p className="text-gray-700 font-medium">
-            {item.POL} <span className="mx-2">→</span> {item.POD}
-          </p>
-        </div>
+      <div className="p-6">
 
         {/* Size */}
-        <div className="col-span-2 text-center">
-          <span className="rounded-lg bg-blue-100 px-3 py-2 font-semibold text-blue-700">
+        <div className="text-center">
+          <span className="rounded-full bg-[#0F4C81] px-5 py-2 text-sm font-bold tracking-wider text-white">
             {item.SIZE}
           </span>
         </div>
 
-        {/* Detail */}
-        <div className="col-span-2 text-center">
-          <Link
-            href={`/cargo/${item.ID}`}
-            className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
-          >
-            Detail
-          </Link>
+        {/* Cargo */}
+        <h2 className="mt-6 text-center text-3xl font-extrabold tracking-wide text-gray-800">
+          {item.CARGO.toUpperCase()}
+        </h2>
+
+        {/* Route */}
+        <div className="mt-8 flex flex-col items-center">
+
+          <p className="text-lg font-semibold text-gray-700">
+            {item.POL}
+          </p>
+
+          <div className="my-2 flex flex-col items-center text-blue-600 leading-none">
+            <span>│</span>
+            <span className="text-xl">▼</span>
+            <span>│</span>
+          </div>
+
+          <p className="text-lg font-semibold text-gray-700">
+            {item.POD}
+          </p>
+
         </div>
+
+        <hr className="my-6" />
+
+        <Link
+          href={`/cargo/${item.ID}`}
+          className="block w-full rounded-xl bg-[#0F4C81] py-3 text-center font-semibold text-white transition duration-300 hover:bg-[#0B3D68]"
+        >
+          View Detail
+        </Link>
 
       </div>
 
