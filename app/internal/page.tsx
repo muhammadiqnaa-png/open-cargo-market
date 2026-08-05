@@ -144,7 +144,7 @@ return (
                 FMLS
               </h2>  
 
-              <p className="mt-1 text-gray-500">
+              <p className="mt-1 text-slate-600">
                 Available Shipment
               </p>
               <div className="mt-3 h-1 w-20 rounded-full bg-[#0A2F35]"></div>
@@ -175,27 +175,27 @@ return (
 
                 </div>
 
-                  <div className="space-y-3 text-sm">
+                  <div className="space-y-3 text-sm text-slate-800">
 
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Cargo</span>
-                      <span className="font-semibold">{item.CARGO}</span>
+                      <span className="text-slate-600">Cargo</span>
+                      <span className="font-semibold text-slate-900">{item.CARGO}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Size</span>
-                      <span className="font-semibold">{item.SIZE}</span>
+                      <span className="text-slate-600">Size</span>
+                      <span className="font-semibold text-slate-900">{item.SIZE}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Route</span>
-                      <span className="font-semibold">
+                      <span className="text-slate-600">Route</span>
+                      <span className="font-semibold text-slate-900">
                         {item.POL} → {item.POD}
                       </span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Freight</span>
+                      <span className="text-slate-600">Freight</span>
                       <span className="text-lg font-bold text-[#0A2F35]">
                         {item.FREIGHT ?? "-"}
                       </span>
