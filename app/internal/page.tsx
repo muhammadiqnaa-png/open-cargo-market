@@ -57,11 +57,11 @@ export default function InternalPage() {
   );
 
 return (
-<main className="min-h-screen bg-[#F8FAFC]">
+<main className="min-h-screen bg-slate-50">
 
   <div className="mx-auto max-w-7xl p-6">
 
-    <h1 className="text-4xl font-bold text-[#0A2F35]">
+    <h1 className="text-4xl font-bold text-[#0B3D68]">
       Internal Shipment
     </h1>
 
@@ -70,13 +70,13 @@ return (
     </p>
 
     {/* Search */}
-    <div className="mt-8 rounded-2xl bg-white p-4 shadow">
+    <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-4 shadow-md">
       <input
         type="text"
         placeholder="Search Cargo, POL, POD..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-[#0A2F35] focus:ring-2 focus:ring-[#D9EEF1]"
+        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-[#0B3D68] focus:ring-2 focus:ring-blue-100"
       />
     </div>
 
@@ -99,7 +99,7 @@ return (
 
         </div>
 
-        <div className="sticky bottom-6 mt-8 rounded-2xl border border-[#184750] bg-[#0A2F35] p-5 text-white shadow-xl">
+        <div className="sticky bottom-6 mt-8 rounded-2xl border border-[#0F4C81] bg-[#0B3D68] p-5 text-white shadow-xl">
 
           <div className="flex items-center justify-between">
 
@@ -122,7 +122,7 @@ return (
 
                 setShowPreview(true);
               }}
-              className="rounded-xl bg-[#0A2F35] px-6 py-3 font-semibold text-white transition hover:bg-[#114A53]"
+              className="rounded-xl bg-[#0B3D68] px-6 py-3 font-semibold text-white transition hover:bg-[#0F4C81]"
             >
               Generate WhatsApp List
             </button>
@@ -147,7 +147,7 @@ return (
               <p className="mt-1 text-slate-600">
                 Available Shipment
               </p>
-              <div className="mt-3 h-1 w-20 rounded-full bg-[#0A2F35]"></div>
+              <div className="mt-3 h-1 w-20 rounded-full bg-[#0B3D68]"></div>
 
               <button
                 onClick={() => setShowPreview(false)}
@@ -178,27 +178,34 @@ return (
                   <div className="space-y-3 text-sm text-slate-800">
 
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Cargo</span>
-                      <span className="font-semibold text-slate-900">{item.CARGO}</span>
+                        <span className="text-slate-600">Cargo</span>
+                        <span className="font-semibold text-slate-900">{item.CARGO}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Size</span>
-                      <span className="font-semibold text-slate-900">{item.SIZE}</span>
+                        <span className="text-slate-600">Size</span>
+                        <span className="font-semibold text-slate-900">{item.SIZE}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Route</span>
-                      <span className="font-semibold text-slate-900">
-                        {item.POL} → {item.POD}
-                      </span>
+                        <span className="text-slate-600">Route</span>
+                        <span className="font-semibold text-slate-900">
+                            {item.POL} → {item.POD}
+                        </span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-slate-600">Freight</span>
-                      <span className="text-lg font-bold text-[#0A2F35]">
-                        {item.FREIGHT ?? "-"}
-                      </span>
+                        <span className="text-gray-500">Laycan</span>
+                        <span className="font-semibold text-slate-900">
+                            {item.LAYCAN ?? "-"}
+                        </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                        <span className="text-slate-600">Freight</span>
+                        <span className="text-lg font-bold text-[#0A2F35]">
+                            {item.FREIGHT ?? "-"}
+                        </span>
                     </div>
 
                   </div>
@@ -210,22 +217,24 @@ return (
 
               <button
                 onClick={() => {
-                  const text = selectedCargo
-                    .map(
-                      (item, index) => `${index + 1}.
-
-Cargo : ${item.CARGO}
-Size : ${item.SIZE}
-Route : ${item.POL} → ${item.POD}
-Freight : ${item.FREIGHT ?? "-"}`
-                    )
-                    .join("\n\n-------------------------\n\n");
+                const text =
+                    "🚢 AVAILABLE SHIPMENT FMLS\n\n" +
+                    selectedCargo
+                        .map((item, index) => {
+return (`${index + 1}. Cargo      : ${item.CARGO}
+Size       : ${item.SIZE}
+Route      : ${item.POL} → ${item.POD}
+Laycan     : ${item.LAYCAN ?? "-"}
+Freight    : ${item.FREIGHT ?? "-"}`
+                            );
+                        })
+                        .join("\n\n──────────────────────────────\n\n");                   
 
                   navigator.clipboard.writeText(text);
 
                   alert("Copied successfully!");
                 }}
-                className="rounded-xl bg-[#0A2F35] px-6 py-3 font-semibold text-white transition hover:bg-[#114A53]"
+                className="rounded-xl bg-[#0B3D68] px-6 py-3 font-semibold text-white transition hover:bg-[#0F4C81]"
               >
                 Copy to Clipboard
               </button>

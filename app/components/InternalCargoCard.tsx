@@ -11,6 +11,7 @@ type Cargo = {
   DISTANCE: string;
   LAYCAN?: string;
   FREIGHT?: string;
+  FROM?: string;
 };
 
 type Props = {
@@ -35,31 +36,32 @@ export default function InternalCargoCard({
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
 
-        <label className="flex items-center gap-3 cursor-pointer">
-          <input
+        <div className="flex items-center gap-3">
+
+            <input
             type="checkbox"
             checked={checked}
             onChange={() => onCheck(item.ID)}
             className="h-5 w-5 accent-[#0A2F35]"
-          />
+            />
 
-          <span className="text-sm font-semibold text-slate-700">
-            Select
-          </span>
-        </label>
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                {item.FROM || "-"}
+            </span>
+
+        </div>
 
         <span
-          className={`rounded-full px-3 py-1 text-xs font-bold ${
-            item.STATUS === "OPEN"
-              ? "bg-[#D9EEF1] text-[#0A2F35]"
-              : "bg-gray-200 text-gray-700"
-          }`}
+            className={`rounded-full px-3 py-1 text-xs font-bold ${
+                item.STATUS === "OPEN"
+                ? "bg-[#D9EEF1] text-[#0A2F35]"
+                : "bg-gray-200 text-gray-700"
+            }`}
         >
-          {item.STATUS}
+            {item.STATUS}
         </span>
 
-      </div>
-
+    </div>
       {/* Size */}
       <div className="text-center">
 
