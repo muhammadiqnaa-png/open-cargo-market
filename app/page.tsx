@@ -76,7 +76,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-6 py-14">
 
           <h1 className="text-center text-4xl font-extrabold tracking-wide md:text-6xl">
-            🚢 AVAILABLE MAESTRO
+            🚢 AVAILABLE MARKET
           </h1>
 
           <p className="mt-4 text-center text-xl font-semibold text-slate-300">
