@@ -28,6 +28,17 @@ export default function Home() {
   const [sizeFilter, setSizeFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
 
+  // OFFER VESSEL
+  const [showVesselForm, setShowVesselForm] = useState(false);
+
+  const [vesselCompany, setVesselCompany] = useState("");
+  const [vesselType, setVesselType] = useState("");
+  const [vesselSize, setVesselSize] = useState("");
+  const [vesselPosition, setVesselPosition] = useState("");
+  const [vesselAvailable, setVesselAvailable] = useState("");
+  const [vesselNextPort, setVesselNextPort] = useState("");
+  const [vesselWhatsapp, setVesselWhatsapp] = useState("");
+
   useEffect(() => {
     fetch("/api/cargo")
       .then((res) => res.json())
@@ -70,7 +81,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#F8FAFC]">
 
-      {/* Header */}
+      {/* HEADER */}
       <div className="bg-gradient-to-r from-[#0B3D68] via-[#0F4C81] to-[#0B3D68] text-white shadow-lg">
 
         <div className="mx-auto max-w-7xl px-6 py-14">
@@ -88,45 +99,61 @@ export default function Home() {
             across Indonesia.
           </p>
 
-        <div className="mt-10 grid grid-cols-3 gap-4 md:gap-6">
+          <div className="mt-10 grid grid-cols-3 gap-4 md:gap-6">
 
-          <div className="rounded-2xl border border-white/20 bg-white/5 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
-            <div className="text-4xl"></div>
-            <div className="mt-3 text-4xl font-extrabold">
-              {filteredCargo.length}
-            </div>
-            <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-slate-300">
-              Available Shipment
-            </div>
-            <div className="mt-4 inline-flex rounded-full bg-green-500/20 px-3 py-1 text-xs font-semibold text-green-200"></div>
-              ● Live
-          </div>
-          <div className="rounded-2xl border border-white/20 bg-white/5 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
-            <div className="text-4xl"></div>
-            <div className="mt-3 text-4xl font-extrabold">
-              {[...new Set(cargo.map(item => item.AREA))].length}
-            </div>
-            <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-slate-300">
-              Operating Area
-            </div>
-            <div className="mt-4 inline-flex rounded-full bg-blue-500/20 px-3 py-1 text-xs font-semibold text-blue-200"></div>
-              Indonesia
+            {/* AVAILABLE SHIPMENT */}
+            <div className="rounded-2xl border border-white/20 bg-white/5 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
+
+              <div className="mt-3 text-4xl font-extrabold">
+                {filteredCargo.length}
+              </div>
+
+              <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-slate-300">
+                Available Shipment
+              </div>
+
+              <div className="mt-4 inline-flex rounded-full bg-green-500/20 px-3 py-1 text-xs font-semibold text-green-200">
+                ● Live
+              </div>
+
             </div>
 
-          <div className="rounded-2xl border border-white/20 bg-white/5 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
-            <div className="text-4xl"></div>
-            <div className="mt-3 text-4xl font-extrabold">
-              {[
-                ...new Set(
-                  cargo.flatMap(item => [item.POL, item.POD])
-                )
-              ].length}
+            {/* OPERATING AREA */}
+            <div className="rounded-2xl border border-white/20 bg-white/5 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
+
+              <div className="mt-3 text-4xl font-extrabold">
+                {[...new Set(cargo.map((item) => item.AREA))].length}
+              </div>
+
+              <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-slate-300">
+                Operating Area
+              </div>
+
+              <div className="mt-4 inline-flex rounded-full bg-blue-500/20 px-3 py-1 text-xs font-semibold text-blue-200">
+                Indonesia
+              </div>
+
             </div>
-            <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-slate-300">
-              Ports
-            </div>
-            <div className="mt-4 inline-flex rounded-full bg-orange-500/20 px-3 py-1 text-xs font-semibold text-orange-200"></div>
-              Updated Daily
+
+            {/* PORTS */}
+            <div className="rounded-2xl border border-white/20 bg-white/5 p-6 text-center backdrop-blur transition-all duration-300 hover:bg-white/20">
+
+              <div className="mt-3 text-4xl font-extrabold">
+                {[
+                  ...new Set(
+                    cargo.flatMap((item) => [item.POL, item.POD])
+                  )
+                ].length}
+              </div>
+
+              <div className="mt-2 text-sm font-semibold uppercase tracking-widest text-slate-300">
+                Ports
+              </div>
+
+              <div className="mt-4 inline-flex rounded-full bg-orange-500/20 px-3 py-1 text-xs font-semibold text-orange-200">
+                Updated Daily
+              </div>
+
             </div>
 
           </div>
@@ -135,9 +162,248 @@ export default function Home() {
 
       </div>
 
+
+      {/* OFFER VESSEL */}
+      <div className="mx-auto max-w-7xl px-6 pt-6">
+
+        <div className="rounded-3xl bg-gradient-to-r from-[#0B3D68] to-[#0F4C81] p-6 text-center shadow-lg">
+
+          <h2 className="text-2xl font-extrabold text-white">
+            🚢 HAVE A VESSEL?
+          </h2>
+
+          <p className="mt-2 text-sm text-slate-300">
+            Offer your vessel to the FMLS market
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setShowVesselForm(true)}
+            className="mt-5 rounded-xl bg-white px-8 py-3 font-bold text-[#0B3D68] shadow-md transition hover:scale-105 hover:bg-slate-100"
+          >
+            🚢 OFFER VESSEL
+          </button>
+
+        </div>
+
+      </div>
+
+
+      {/* VESSEL FORM MODAL */}
+      {showVesselForm && (
+
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl">
+
+            {/* MODAL HEADER */}
+            <div className="mb-6 flex items-center justify-between">
+
+              <div>
+
+                <h2 className="text-2xl font-extrabold text-[#0B3D68]">
+                  🚢 OFFER VESSEL
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Submit your vessel information
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowVesselForm(false)}
+                className="text-3xl font-bold text-gray-400 hover:text-gray-700"
+              >
+                ×
+              </button>
+
+            </div>
+
+
+            <div className="space-y-4">
+
+              {/* COMPANY */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Company
+                </label>
+
+                <input
+                  type="text"
+                  value={vesselCompany}
+                  onChange={(e) => setVesselCompany(e.target.value)}
+                  placeholder="PT. ....."
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* TYPE */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Type
+                </label>
+
+                <select
+                  value={vesselType}
+                  onChange={(e) => setVesselType(e.target.value)}
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#0F4C81] focus:bg-white"
+                >
+
+                  <option value="">
+                    Select Type
+                  </option>
+
+                  <option value="Tug">
+                    Tug
+                  </option>
+
+                  <option value="Barge">
+                    Barge
+                  </option>
+
+                  <option value="Tug & Barge">
+                    Tug & Barge
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              {/* SIZE */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Size
+                </label>
+
+                <input
+                  type="text"
+                  value={vesselSize}
+                  onChange={(e) => setVesselSize(e.target.value)}
+                  placeholder="300 FT"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* POSITION */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Position
+                </label>
+
+                <input
+                  type="text"
+                  value={vesselPosition}
+                  onChange={(e) => setVesselPosition(e.target.value)}
+                  placeholder="Muara Jawa"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* AVAILABLE */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Available
+                </label>
+
+                <input
+                  type="text"
+                  value={vesselAvailable}
+                  onChange={(e) => setVesselAvailable(e.target.value)}
+                  placeholder="ASAP / 10 Sep 2026"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* NEXT PORT */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Next Port
+                </label>
+
+                <input
+                  type="text"
+                  value={vesselNextPort}
+                  onChange={(e) => setVesselNextPort(e.target.value)}
+                  placeholder="Samarinda"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* WHATSAPP */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  WhatsApp
+                </label>
+
+                <input
+                  type="tel"
+                  value={vesselWhatsapp}
+                  onChange={(e) => setVesselWhatsapp(e.target.value)}
+                  placeholder="628xxxxxxxxxx"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none transition focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+            </div>
+
+
+            {/* SUBMIT */}
+            <button
+  type="button"
+  onClick={() => {
+    const message = `🚢 OFFER VESSEL
+
+Company      : ${vesselCompany}
+Type         : ${vesselType}
+Size         : ${vesselSize}
+Position     : ${vesselPosition}
+Available    : ${vesselAvailable}
+Next Port    : ${vesselNextPort}
+WhatsApp     : ${vesselWhatsapp}`;
+
+    const whatsappUrl = `https://wa.me/6285222124545?text=${encodeURIComponent(
+      message
+    )}`;
+
+    window.open(whatsappUrl, "_blank");
+  }}
+  className="mt-6 w-full rounded-xl bg-[#0B3D68] py-3 font-bold text-white shadow-md transition hover:bg-[#0F4C81]"
+>
+  SEND OFFER VESSEL
+</button>
+
+          </div>
+
+        </div>
+
+      )}
+
+
+      {/* MARKET CONTENT */}
       <div className="mx-auto max-w-7xl p-6">
 
-        {/* Search */}
+        {/* SEARCH */}
         <div className="mb-8 rounded-3xl border border-gray-200 bg-white p-3 shadow-md">
 
           <div className="flex items-center">
@@ -158,82 +424,127 @@ export default function Home() {
 
         </div>
 
+
         {/* FILTER */}
         <div className="mb-8 rounded-3xl border border-gray-200 bg-white p-5 shadow-md">
 
           <div className="grid grid-cols-4 gap-3">
 
+            {/* AREA */}
+            <select
+              value={areaFilter}
+              onChange={(e) => setAreaFilter(e.target.value)}
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+            >
 
-          {/* AREA */}
-          <select
-            value={areaFilter}
-            onChange={(e) => setAreaFilter(e.target.value)}
-            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
-          >
-            <option value="ALL">Area</option>
-
-            {[...new Set(cargo.map((item) => item.AREA))].map((area) => (
-              <option key={area} value={area}>
-                {area}
+              <option value="ALL">
+                Area
               </option>
-            ))}
-          </select>
 
-          {/* CARGO */}
-          <select
-            value={cargoFilter}
-            onChange={(e) => setCargoFilter(e.target.value)}
-            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
-          >
-            <option value="ALL">Cargo</option>
+              {[...new Set(cargo.map((item) => item.AREA))].map((area) => (
 
-            {[...new Set(cargo.map((item) => item.CARGO))].map((cargoType) => (
-              <option key={cargoType} value={cargoType}>
-                {cargoType}
+                <option
+                  key={area}
+                  value={area}
+                >
+                  {area}
+                </option>
+
+              ))}
+
+            </select>
+
+
+            {/* CARGO */}
+            <select
+              value={cargoFilter}
+              onChange={(e) => setCargoFilter(e.target.value)}
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+            >
+
+              <option value="ALL">
+                Cargo
               </option>
-            ))}
-          </select>
 
-          {/* SIZE */}
-          <select
-            value={sizeFilter}
-            onChange={(e) => setSizeFilter(e.target.value)}
-            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
-          >
-            <option value="ALL">Size</option>
+              {[...new Set(cargo.map((item) => item.CARGO))].map((cargoType) => (
 
-            {[...new Set(cargo.map((item) => item.SIZE))].map((size) => (
-              <option key={size} value={size}>
-                {size}
+                <option
+                  key={cargoType}
+                  value={cargoType}
+                >
+                  {cargoType}
+                </option>
+
+              ))}
+
+            </select>
+
+
+            {/* SIZE */}
+            <select
+              value={sizeFilter}
+              onChange={(e) => setSizeFilter(e.target.value)}
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+            >
+
+              <option value="ALL">
+                Size
               </option>
-            ))}
-          </select>
 
-          {/* STATUS */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
-          >
-            <option value="ALL">Status</option>
+              {[...new Set(cargo.map((item) => item.SIZE))].map((size) => (
 
-            {[...new Set(cargo.map((item) => item.STATUS))].map((status) => (
-              <option key={status} value={status}>
-                {status}
+                <option
+                  key={size}
+                  value={size}
+                >
+                  {size}
+                </option>
+
+              ))}
+
+            </select>
+
+
+            {/* STATUS */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+            >
+
+              <option value="ALL">
+                Status
               </option>
-            ))}
-          </select>
+
+              {[...new Set(cargo.map((item) => item.STATUS))].map((status) => (
+
+                <option
+                  key={status}
+                  value={status}
+                >
+                  {status}
+                </option>
+
+              ))}
+
+            </select>
+
+          </div>
 
         </div>
-      </div> 
 
-        {/* Loading */}
+
+        {/* LOADING */}
         {loading ? (
+
           <div className="text-center text-xl font-semibold">
             Loading Cargo...
           </div>
+
         ) : (
+
           <>
+
             <p className="mb-5 text-gray-600">
               Total Cargo : <strong>{filteredCargo.length}</strong>
             </p>
@@ -241,14 +552,18 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 
               {filteredCargo.map((item) => (
+
                 <CargoCard
                   key={item.ID}
                   item={item}
                 />
+
               ))}
 
             </div>
+
           </>
+
         )}
 
       </div>
