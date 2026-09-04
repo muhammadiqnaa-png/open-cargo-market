@@ -39,6 +39,19 @@ export default function Home() {
   const [vesselNextPort, setVesselNextPort] = useState("");
   const [vesselWhatsapp, setVesselWhatsapp] = useState("");
 
+  // OFFER CARGO
+  const [showCargoForm, setShowCargoForm] = useState(false);
+
+  const [cargoCompany, setCargoCompany] = useState("");
+  const [cargoVesselType, setCargoVesselType] = useState("");
+  const [cargoType, setCargoType] = useState("");
+  const [cargoSize, setCargoSize] = useState("");
+  const [cargoPOL, setCargoPOL] = useState("");
+  const [cargoPOD, setCargoPOD] = useState("");
+  const [cargoLaycan, setCargoLaycan] = useState("");
+  const [cargoFreight, setCargoFreight] = useState("");
+  const [cargoWhatsapp, setCargoWhatsapp] = useState("");
+
   useEffect(() => {
     fetch("/api/cargo")
       .then((res) => res.json())
@@ -163,26 +176,53 @@ export default function Home() {
       </div>
 
 
-      {/* OFFER VESSEL */}
+      {/* OFFER VESSEL & CARGO */}
       <div className="mx-auto max-w-7xl px-6 pt-6">
 
-        <div className="rounded-3xl bg-gradient-to-r from-[#0B3D68] to-[#0F4C81] p-6 text-center shadow-lg">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
-          <h2 className="text-2xl font-extrabold text-white">
-            🚢 HAVE A VESSEL?
-          </h2>
+          {/* OFFER VESSEL */}
+          <div className="rounded-3xl bg-gradient-to-r from-[#0B3D68] to-[#0F4C81] p-6 text-center shadow-lg">
 
-          <p className="mt-2 text-sm text-slate-300">
-            Offer your vessel to the FMLS market
-          </p>
+            <h2 className="text-2xl font-extrabold text-white">
+              🚢 HAVE A VESSEL?
+            </h2>
 
-          <button
-            type="button"
-            onClick={() => setShowVesselForm(true)}
-            className="mt-5 rounded-xl bg-white px-8 py-3 font-bold text-[#0B3D68] shadow-md transition hover:scale-105 hover:bg-slate-100"
-          >
-            🚢 OFFER VESSEL
-          </button>
+            <p className="mt-2 text-sm text-slate-300">
+              Offer your vessel to the FMLS market
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setShowVesselForm(true)}
+              className="mt-5 rounded-xl bg-white px-8 py-3 font-bold text-[#0B3D68] shadow-md transition hover:scale-105 hover:bg-slate-100"
+            >
+              🚢 OFFER VESSEL
+            </button>
+
+          </div>
+
+
+          {/* OFFER CARGO */}
+          <div className="rounded-3xl bg-gradient-to-r from-[#0F4C81] to-[#0B3D68] p-6 text-center shadow-lg">
+
+            <h2 className="text-2xl font-extrabold text-white">
+              📦 HAVE A CARGO?
+            </h2>
+
+            <p className="mt-2 text-sm text-slate-300">
+              Offer your cargo to the FMLS market
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setShowCargoForm(true)}
+              className="mt-5 rounded-xl bg-white px-8 py-3 font-bold text-[#0B3D68] shadow-md transition hover:scale-105 hover:bg-slate-100"
+            >
+              📦 OFFER CARGO
+            </button>
+
+          </div>
 
         </div>
 
@@ -259,16 +299,12 @@ export default function Home() {
                     Select Type
                   </option>
 
-                  <option value="Tug">
-                    Tug
-                  </option>
-
                   <option value="Barge">
                     Barge
                   </option>
 
-                  <option value="Tug & Barge">
-                    Tug & Barge
+                  <option value="MV">
+                    MV
                   </option>
 
                 </select>
@@ -370,9 +406,9 @@ export default function Home() {
 
             {/* SUBMIT */}
             <button
-  type="button"
-  onClick={() => {
-    const message = `🚢 OFFER VESSEL
+              type="button"
+              onClick={() => {
+                const message = `🚢 OFFER VESSEL
 
 Company      : ${vesselCompany}
 Type         : ${vesselType}
@@ -382,16 +418,289 @@ Available    : ${vesselAvailable}
 Next Port    : ${vesselNextPort}
 WhatsApp     : ${vesselWhatsapp}`;
 
-    const whatsappUrl = `https://wa.me/6285222124545?text=${encodeURIComponent(
-      message
-    )}`;
+                const whatsappUrl = `https://wa.me/6285222124545?text=${encodeURIComponent(
+                  message
+                )}`;
 
-    window.open(whatsappUrl, "_blank");
-  }}
-  className="mt-6 w-full rounded-xl bg-[#0B3D68] py-3 font-bold text-white shadow-md transition hover:bg-[#0F4C81]"
->
-  SEND OFFER VESSEL
-</button>
+                window.open(whatsappUrl, "_blank");
+              }}
+              className="mt-6 w-full rounded-xl bg-[#0B3D68] py-3 font-bold text-white shadow-md transition hover:bg-[#0F4C81]"
+            >
+              SEND OFFER VESSEL
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
+
+
+      {/* CARGO FORM MODAL */}
+      {showCargoForm && (
+
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+
+          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl">
+
+            {/* MODAL HEADER */}
+            <div className="mb-6 flex items-center justify-between">
+
+              <div>
+
+                <h2 className="text-2xl font-extrabold text-[#0B3D68]">
+                  📦 OFFER CARGO
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  Submit your cargo information
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowCargoForm(false)}
+                className="text-3xl font-bold text-gray-400 hover:text-gray-700"
+              >
+                ×
+              </button>
+
+            </div>
+
+
+            <div className="space-y-4">
+
+              {/* COMPANY */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Company
+                </label>
+
+                <input
+                  type="text"
+                  value={cargoCompany}
+                  onChange={(e) => setCargoCompany(e.target.value)}
+                  placeholder="PT. ....."
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* TYPE VESSEL */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Type Vessel
+                </label>
+
+                <select
+                  value={cargoVesselType}
+                  onChange={(e) => setCargoVesselType(e.target.value)}
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                >
+
+                  <option value="">
+                    Select Type Vessel
+                  </option>
+
+                  <option value="Barge">
+                    Barge
+                  </option>
+
+                  <option value="MV">
+                    MV
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              {/* TYPE CARGO */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Type Cargo
+                </label>
+
+                <select
+                  value={cargoType}
+                  onChange={(e) => setCargoType(e.target.value)}
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                >
+
+                  <option value="">
+                    Select Cargo
+                  </option>
+
+                  <option value="Coal">
+                    Coal
+                  </option>
+
+                  <option value="Bauxite">
+                    Bauxite
+                  </option>
+
+                  <option value="Nickel">
+                    Nickel
+                  </option>
+
+                  <option value="Sand">
+                    Sand
+                  </option>
+
+                  <option value="Split">
+                    Split
+                  </option>
+
+                  <option value="Other">
+                    Other
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              {/* SIZE */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Size
+                </label>
+
+                <input
+                  type="text"
+                  value={cargoSize}
+                  onChange={(e) => setCargoSize(e.target.value)}
+                  placeholder="300 FT"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* POL */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  POL
+                </label>
+
+                <input
+                  type="text"
+                  value={cargoPOL}
+                  onChange={(e) => setCargoPOL(e.target.value)}
+                  placeholder="Samarinda"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* POD */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  POD
+                </label>
+
+                <input
+                  type="text"
+                  value={cargoPOD}
+                  onChange={(e) => setCargoPOD(e.target.value)}
+                  placeholder="Cirebon"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* LAYCAN */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Laycan
+                </label>
+
+                <input
+                  type="text"
+                  value={cargoLaycan}
+                  onChange={(e) => setCargoLaycan(e.target.value)}
+                  placeholder="ASAP / 10 Sep 2026"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* FREIGHT */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  Freight
+                </label>
+
+                <input
+                  type="text"
+                  value={cargoFreight}
+                  onChange={(e) => setCargoFreight(e.target.value)}
+                  placeholder="IDR 185,000/MT"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+
+              {/* WHATSAPP */}
+              <div>
+
+                <label className="mb-1 block text-sm font-semibold text-gray-700">
+                  WhatsApp
+                </label>
+
+                <input
+                  type="tel"
+                  value={cargoWhatsapp}
+                  onChange={(e) => setCargoWhatsapp(e.target.value)}
+                  placeholder="628xxxxxxxxxx"
+                  className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 outline-none focus:border-[#0F4C81] focus:bg-white"
+                />
+
+              </div>
+
+            </div>
+
+
+            {/* SUBMIT */}
+            <button
+              type="button"
+              onClick={() => {
+                const message = `📦 OFFER CARGO
+
+Company      : ${cargoCompany}
+Type Vessel  : ${cargoVesselType}
+Type Cargo   : ${cargoType}
+Size         : ${cargoSize}
+POL          : ${cargoPOL}
+POD          : ${cargoPOD}
+Laycan       : ${cargoLaycan}
+Freight      : ${cargoFreight}
+WhatsApp     : ${cargoWhatsapp}`;
+
+                const whatsappUrl = `https://wa.me/6285222124545?text=${encodeURIComponent(
+                  message
+                )}`;
+
+                window.open(whatsappUrl, "_blank");
+              }}
+              className="mt-6 w-full rounded-xl bg-[#0B3D68] py-3 font-bold text-white shadow-md transition hover:bg-[#0F4C81]"
+            >
+              SEND OFFER CARGO
+            </button>
 
           </div>
 
