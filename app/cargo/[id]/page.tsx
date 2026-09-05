@@ -58,7 +58,7 @@ export default async function CargoDetail({ params }: Props) {
         <div className="rounded-2xl bg-white shadow-lg border border-gray-200 p-8">
 
           {/* Header */}
-          <div className="space-y-3">
+          <div className="space-y-3 text-gray-900">
 
             <p>
               <span className="font-semibold">📋 Status :</span>{" "}
@@ -80,11 +80,11 @@ export default async function CargoDetail({ params }: Props) {
           <hr className="my-6" />
 
           {/* Information */}
-          <h2 className="mb-5 text-xl font-bold">
+          <h2 className="mb-5 text-xl font-bold text-[#0B3D68]">
             📊 INFORMATION
           </h2>
 
-          <div className="space-y-4">
+          <div className="space-y-4 text-gray-900">
 
             <p>
               <strong>🚢 Cargo :</strong> {item.CARGO} ({item.SIZE})
@@ -118,11 +118,11 @@ export default async function CargoDetail({ params }: Props) {
           <hr className="my-6" />
 
           {/* Description */}
-          <h2 className="mb-4 text-xl font-bold">
+          <h2 className="mb-4 text-xl font-bold text-[#0B3D68]">
             📝 DESCRIPTION
           </h2>
 
-          <div className="rounded-xl bg-gray-50 border border-gray-200 p-5 whitespace-pre-line leading-7">
+          <div className="rounded-xl bg-gray-50 border border-gray-200 p-5 whitespace-pre-line leading-7 text-gray-900">
             {item.DETAIL}
           </div>
 
