@@ -476,13 +476,17 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => {
-                  const message = `🚢 VESSEL INQUIRY
+                  const message = `🚢 Vessel Inquiry
 
-Type        : ${item.TYPE || "-"}
+Hi, is this vessel still available/open?
+
+Vessel Type : ${item.TYPE || "-"}
 Size        : ${item.SIZE || "-"}
 Position    : ${item.POSITION || "-"}
 Available   : ${item["AVAILABLE DATE"] || "-"}
-Next Port   : ${item["NEXT PORT"] || "-"}`;
+Next Port   : ${item["NEXT PORT"] || "-"}
+
+Thank you.`;
 
                   const whatsappUrl =
                     `https://wa.me/6285222124545?text=${encodeURIComponent(
