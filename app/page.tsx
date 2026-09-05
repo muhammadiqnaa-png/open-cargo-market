@@ -726,7 +726,7 @@ WhatsApp     : ${cargoWhatsapp}`;
               placeholder="Search Cargo, POL, POD, Area or Route..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-transparent p-3 text-lg outline-none"
+              className="w-full bg-transparent p-3 text-lg text-gray-900 placeholder:text-gray-400 outline-none"
             />
 
           </div>
@@ -743,7 +743,7 @@ WhatsApp     : ${cargoWhatsapp}`;
             <select
               value={areaFilter}
               onChange={(e) => setAreaFilter(e.target.value)}
-              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium text-gray-900 transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
             >
 
               <option value="ALL">
@@ -768,7 +768,7 @@ WhatsApp     : ${cargoWhatsapp}`;
             <select
               value={cargoFilter}
               onChange={(e) => setCargoFilter(e.target.value)}
-              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium text-gray-900 transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
             >
 
               <option value="ALL">
@@ -793,7 +793,7 @@ WhatsApp     : ${cargoWhatsapp}`;
             <select
               value={sizeFilter}
               onChange={(e) => setSizeFilter(e.target.value)}
-              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium text-gray-900 transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
             >
 
               <option value="ALL">
@@ -818,7 +818,7 @@ WhatsApp     : ${cargoWhatsapp}`;
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
+              className="h-12 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm font-medium text-gray-900 transition-all focus:border-blue-500 focus:bg-white focus:outline-none"
             >
 
               <option value="ALL">
