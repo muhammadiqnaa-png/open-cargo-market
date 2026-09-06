@@ -35,7 +35,7 @@ export async function GET() {
 
 
     // =================================================
-    // APPS SCRIPT URL
+    // BUILD URL
     // =================================================
 
     const url =
@@ -51,14 +51,18 @@ export async function GET() {
     // =================================================
 
     const response =
-      await fetch(url, {
+      await fetch(
+        url,
+        {
+          method: "GET",
+          cache: "no-store"
+        }
+      );
 
-        method: "GET",
 
-        cache: "no-store"
-
-      });
-
+    // =================================================
+    // PARSE RESPONSE
+    // =================================================
 
     const result =
       await response.json();
@@ -96,7 +100,7 @@ export async function GET() {
 
 
     // =================================================
-    // MAPPING DATA
+    // MAPPING
     // GOOGLE SHEET → ADMIN
     // =================================================
 
@@ -107,8 +111,7 @@ export async function GET() {
             (item: any) => ({
 
               // ---------------------------------------
-              // ID
-              // Google Sheet: NO
+              // A - NO
               // ---------------------------------------
 
               ID:
@@ -116,7 +119,7 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // DATE
+              // B - DATE
               // ---------------------------------------
 
               DATE:
@@ -124,7 +127,7 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // SALES
+              // C - SALES MAESTRO
               // ---------------------------------------
 
               SALES_MAESTRO:
@@ -133,7 +136,7 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // COMPANY
+              // D - NAMA PT
               // ---------------------------------------
 
               NAMA_PT:
@@ -142,34 +145,43 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // LOCATION
+              // E - KEC
               // ---------------------------------------
 
               KEC:
-                item.KEC || "",
-
-              KAB:
-                item.KAB || "",
+                item.KEC ||
+                "",
 
 
               // ---------------------------------------
-              // PIC
+              // F - KAB
+              // ---------------------------------------
+
+              KAB:
+                item.KAB ||
+                "",
+
+
+              // ---------------------------------------
+              // G - PIC
               // ---------------------------------------
 
               PIC:
-                item.PIC || "",
+                item.PIC ||
+                "",
 
 
               // ---------------------------------------
-              // FROM
+              // H - FROM
               // ---------------------------------------
 
               FROM:
-                item.FROM || "",
+                item.FROM ||
+                "",
 
 
               // ---------------------------------------
-              // SIZE BARGE
+              // I - SIZE BARGE
               // ---------------------------------------
 
               SIZE_BARGE:
@@ -178,7 +190,7 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // AREA POL
+              // J - AREA POL
               // ---------------------------------------
 
               AREA_POL:
@@ -187,34 +199,43 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // ROUTE
+              // K - POL
               // ---------------------------------------
 
               POL:
-                item.POL || "",
-
-              POD:
-                item.POD || "",
+                item.POL ||
+                "",
 
 
               // ---------------------------------------
-              // DISTANCE
+              // L - POD
+              // ---------------------------------------
+
+              POD:
+                item.POD ||
+                "",
+
+
+              // ---------------------------------------
+              // M - DISTANCE
               // ---------------------------------------
 
               DISTANCE:
-                item.DISTANCE || "",
+                item.DISTANCE ||
+                "",
 
 
               // ---------------------------------------
-              // CARGO
+              // N - CARGO
               // ---------------------------------------
 
               CARGO:
-                item.CARGO || "",
+                item.CARGO ||
+                "",
 
 
               // ---------------------------------------
-              // COMMERCIAL
+              // O - FREIGHT
               // ---------------------------------------
 
               FREIGHT_SHIPPER:
@@ -223,39 +244,43 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // LAYCAN
+              // P - LAYCAN
               // ---------------------------------------
 
               LAYCAN:
-                item.LAYCAN || "",
+                item.LAYCAN ||
+                "",
 
 
               // ---------------------------------------
-              // PRORATE
+              // Q - PRORATE
               // ---------------------------------------
 
               PRORATE:
-                item.PRORATE || "",
+                item.PRORATE ||
+                "",
 
 
               // ---------------------------------------
-              // DEMURRAGE
+              // R - DEMURRAGE
               // ---------------------------------------
 
               DEMURRAGE:
-                item.DEMURRAGE || "",
+                item.DEMURRAGE ||
+                "",
 
 
               // ---------------------------------------
-              // PAYMENT
+              // S - PAYMENT
               // ---------------------------------------
 
               PAYMENT:
-                item.PAYMENT || "",
+                item.PAYMENT ||
+                "",
 
 
               // ---------------------------------------
-              // OUT FEE
+              // T - OUT FEE
               // ---------------------------------------
 
               OUT_FEE:
@@ -264,30 +289,20 @@ export async function GET() {
 
 
               // ---------------------------------------
-              // STATUS
-              // Google Sheet:
-              // STATUS (OPEN/CLOSE)
+              // U - STATUS
               // ---------------------------------------
 
               STATUS:
-                item[
-                  "STATUS (OPEN/CLOSE)"
-                ] ||
                 item.STATUS ||
                 "",
 
 
               // ---------------------------------------
-              // REMARKS
-              // Google Sheet:
-              // REMARKS / NOTE
+              // V - REMARKS
               // ---------------------------------------
 
               REMARKS:
-                item[
-                  "REMARKS / NOTE"
-                ] ||
-                item.REMARKS ||
+                item["REMARKS / NOTE"] ||
                 "",
 
 
@@ -305,10 +320,12 @@ export async function GET() {
 
 
     // =================================================
-    // RETURN ARRAY
+    // RETURN
     // =================================================
 
-    return NextResponse.json(data);
+    return NextResponse.json(
+      data
+    );
 
 
   } catch (error) {
