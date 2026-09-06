@@ -45,7 +45,7 @@ export async function POST(
 
 
     // =================================================
-    // GET REQUEST BODY
+    // REQUEST BODY
     // =================================================
 
     const body =
@@ -63,7 +63,7 @@ export async function POST(
 
 
     // =================================================
-    // CHECK PASSWORD
+    // PASSWORD
     // =================================================
 
     if (
@@ -121,12 +121,20 @@ export async function POST(
 
 
     // =================================================
-    // SEND TO GOOGLE APPS SCRIPT
+    // APPS SCRIPT URL
     // =================================================
 
-    const response =
+    const appsScriptUrl =
+      APPS_SCRIPT_URL.trim();
+
+
+    // =================================================
+    // REQUEST KE GOOGLE APPS SCRIPT
+    // =================================================
+
+    const appsScriptResponse =
       await fetch(
-        APPS_SCRIPT_URL,
+        appsScriptUrl,
         {
           method: "POST",
 
@@ -148,42 +156,53 @@ export async function POST(
 
           }),
 
-          cache: "no-store",
-
-          redirect: "follow"
+          cache: "no-store"
 
         }
       );
 
 
     // =================================================
-    // READ RESPONSE AS TEXT
-    //
-    // JANGAN LANGSUNG response.json()
+    // BACA RESPONSE SEBAGAI TEXT
     // =================================================
 
     const responseText =
-      await response.text();
+      await appsScriptResponse.text();
 
 
     console.log(
-      "ADMIN APPS SCRIPT STATUS:",
-      response.status
+      "===================================="
     );
 
-
     console.log(
-      "ADMIN APPS SCRIPT URL:",
-      response.url
+      "APPS SCRIPT ADMIN"
     );
 
+    console.log(
+      "ACTION:",
+      action
+    );
 
     console.log(
-      "ADMIN APPS SCRIPT RESPONSE:",
+      "STATUS:",
+      appsScriptResponse.status
+    );
+
+    console.log(
+      "URL:",
+      appsScriptResponse.url
+    );
+
+    console.log(
+      "RESPONSE:",
       responseText.substring(
         0,
-        1000
+        2000
       )
+    );
+
+    console.log(
+      "===================================="
     );
 
 
@@ -191,7 +210,8 @@ export async function POST(
     // PARSE JSON
     // =================================================
 
-    let result: any;
+    let result: any = null;
+
 
     try {
 
@@ -202,14 +222,9 @@ export async function POST(
 
     } catch {
 
-      console.error(
-        "APPS SCRIPT RETURNED NON JSON:",
-        responseText.substring(
-          0,
-          2000
-        )
-      );
-
+      // ===============================================
+      // GOOGLE APPS SCRIPT MENGEMBALIKAN HTML
+      // ===============================================
 
       return NextResponse.json(
         {
@@ -218,14 +233,21 @@ export async function POST(
           message:
             "Google Apps Script mengembalikan HTML, bukan JSON",
 
+          action:
+            action,
+
           status:
-            response.status,
+            appsScriptResponse.status,
+
+          url:
+            appsScriptResponse.url,
 
           response:
             responseText.substring(
               0,
-              500
+              1000
             )
+
         },
         {
           status: 500
@@ -236,12 +258,12 @@ export async function POST(
 
 
     // =================================================
-    // CHECK APPS SCRIPT RESULT
+    // APPS SCRIPT ERROR
     // =================================================
 
     if (
-      !response.ok ||
-      !result?.success
+      !result ||
+      result.success !== true
     ) {
 
       return NextResponse.json(
@@ -250,7 +272,7 @@ export async function POST(
 
           message:
             result?.message ||
-            "Gagal menjalankan Admin API",
+            "Google Apps Script gagal menjalankan request",
 
           result:
             result
@@ -269,7 +291,10 @@ export async function POST(
     // =================================================
 
     return NextResponse.json(
-      result
+      result,
+      {
+        status: 200
+      }
     );
 
 
