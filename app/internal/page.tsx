@@ -275,12 +275,12 @@ export default function InternalPage() {
                 onClick={() => {
 
                   const text =
-                    "🚢 AVAILABLE SHIPMENT FMLS\n\n" +
+                    "*🚢 AVAILABLE SHIPMENT FMLS*\n\n" +
 
                     selectedCargo
                       .map((item, index) => {
 
-                        return `${index + 1}. Cargo      : ${item.CARGO}
+                        return `*${index + 1}. Cargo      : ${item.CARGO}*
 Size       : ${item.SIZE}
 Route      : ${item.POL} → ${item.POD}
 Distance   : ${item.DISTANCE || "-"}
