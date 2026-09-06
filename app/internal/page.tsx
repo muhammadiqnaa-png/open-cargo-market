@@ -30,6 +30,9 @@ export default function InternalPage() {
       .then((data) => {
         setCargo(data);
         setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
       });
   }, []);
 
@@ -56,98 +59,107 @@ export default function InternalPage() {
     selected.includes(item.ID)
   );
 
-return (
-<main className="min-h-screen bg-slate-50">
+  return (
+    <main className="min-h-screen bg-slate-50">
 
-  <div className="mx-auto max-w-7xl p-6">
+      <div className="mx-auto max-w-7xl p-6">
 
-    <h1 className="text-4xl font-bold text-[#0B3D68]">
-      Internal Shipment
-    </h1>
+        <h1 className="text-4xl font-bold text-[#0B3D68]">
+          Internal Shipment
+        </h1>
 
-    <p className="mt-2 text-slate-500">
-      Select shipment to generate WhatsApp list.
-    </p>
+        <p className="mt-2 text-slate-500">
+          Select shipment to generate WhatsApp list.
+        </p>
 
-    {/* Search */}
-    <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-4 shadow-md">
-      <input
-        type="text"
-        placeholder="Search Cargo, POL, POD..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-[#0B3D68] focus:ring-2 focus:ring-blue-100"
-      />
-    </div>
-
-    {loading ? (
-      <div className="mt-10 text-center text-lg font-semibold">
-        Loading Shipment...
-      </div>
-    ) : (
-      <>
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-
-          {filteredCargo.map((item) => (
-            <InternalCargoCard
-              key={item.ID}
-              item={item}
-              checked={selected.includes(item.ID)}
-              onCheck={handleCheck}
-            />
-          ))}
-
+        {/* Search */}
+        <div className="mt-8 rounded-2xl border border-gray-200 bg-white p-4 shadow-md">
+          <input
+            type="text"
+            placeholder="Search Cargo, POL, POD..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none transition focus:border-[#0B3D68] focus:ring-2 focus:ring-blue-100"
+          />
         </div>
 
-        <div className="sticky bottom-6 mt-8 rounded-2xl border border-[#0F4C81] bg-[#0B3D68] p-5 text-white shadow-xl">
+        {loading ? (
+          <div className="mt-10 text-center text-lg font-semibold">
+            Loading Shipment...
+          </div>
+        ) : (
+          <>
+            <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
 
-          <div className="flex items-center justify-between">
+              {filteredCargo.map((item) => (
+                <InternalCargoCard
+                  key={item.ID}
+                  item={item}
+                  checked={selected.includes(item.ID)}
+                  onCheck={handleCheck}
+                />
+              ))}
 
-            <div>
-              <h2 className="text-xl font-bold">
-                {selected.length} Shipment Selected
-              </h2>
-
-              <p className="text-sm text-slate-300">
-                Generate WhatsApp list from selected shipment.
-              </p>
             </div>
 
-            <button
-              onClick={() => {
-                if (selectedCargo.length === 0) {
-                  alert("Please select at least one shipment.");
-                  return;
-                }
+            <div className="sticky bottom-6 mt-8 rounded-2xl border border-[#0F4C81] bg-[#0B3D68] p-5 text-white shadow-xl">
 
-                setShowPreview(true);
-              }}
-              className="rounded-xl bg-[#0B3D68] px-6 py-3 font-semibold text-white transition hover:bg-[#0F4C81]"
-            >
-              Generate WhatsApp List
-            </button>
+              <div className="flex items-center justify-between">
 
-          </div>
+                <div>
+                  <h2 className="text-xl font-bold">
+                    {selected.length} Shipment Selected
+                  </h2>
 
-        </div>
-      </>
-    )}
+                  <p className="text-sm text-slate-300">
+                    Generate WhatsApp list from selected shipment.
+                  </p>
+                </div>
 
-  </div>
+                <button
+                  onClick={() => {
+                    if (selectedCargo.length === 0) {
+                      alert("Please select at least one shipment.");
+                      return;
+                    }
 
-              {showPreview && (
+                    setShowPreview(true);
+                  }}
+                  className="rounded-xl bg-[#0B3D68] px-6 py-3 font-semibold text-white transition hover:bg-[#0F4C81]"
+                >
+                  Generate WhatsApp List
+                </button>
+
+              </div>
+
+            </div>
+          </>
+        )}
+
+      </div>
+
+      {/* PREVIEW */}
+      {showPreview && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
 
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-3xl font-bold text-[#0A2F35]">
-                FMLS
-              </h2>  
+            {/* Header */}
+            <div className="mb-6 flex items-start justify-between">
 
-              <p className="mt-1 text-slate-600">
-                Available Shipment
-              </p>
-              <div className="mt-3 h-1 w-20 rounded-full bg-[#0B3D68]"></div>
+              <div>
+
+                <h2 className="text-3xl font-bold text-[#0A2F35]">
+                  FMLS
+                </h2>
+
+                <p className="mt-1 text-slate-600">
+                  Available Shipment
+                </p>
+
+                <div className="mt-3 h-1 w-20 rounded-full bg-[#0B3D68]"></div>
+
+              </div>
 
               <button
                 onClick={() => setShowPreview(false)}
@@ -155,84 +167,135 @@ return (
               >
                 ✕
               </button>
+
             </div>
 
+            {/* SELECTED SHIPMENT */}
             <div className="space-y-4">
+
               {selectedCargo.map((item, index) => (
+
                 <div
                   key={item.ID}
                   className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
                 >
+
                   <div className="mb-5 flex items-center justify-between">
 
                     <div className="text-xl font-bold text-[#0A2F35]">
-                        Shipment #{index + 1}
+                      Shipment #{index + 1}
                     </div>
 
                     <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
-                        AVAILABLE
+                      AVAILABLE
                     </span>
 
-                </div>
+                  </div>
 
                   <div className="space-y-3 text-sm text-slate-800">
 
-                    <div className="flex justify-between">
-                        <span className="text-slate-600">Cargo</span>
-                        <span className="font-semibold text-slate-900">{item.CARGO}</span>
+                    {/* Cargo */}
+                    <div className="flex justify-between gap-4">
+                      <span className="text-slate-600">
+                        Cargo
+                      </span>
+
+                      <span className="font-semibold text-slate-900">
+                        {item.CARGO}
+                      </span>
                     </div>
 
-                    <div className="flex justify-between">
-                        <span className="text-slate-600">Size</span>
-                        <span className="font-semibold text-slate-900">{item.SIZE}</span>
+                    {/* Size */}
+                    <div className="flex justify-between gap-4">
+                      <span className="text-slate-600">
+                        Size
+                      </span>
+
+                      <span className="font-semibold text-slate-900">
+                        {item.SIZE}
+                      </span>
                     </div>
 
-                    <div className="flex justify-between">
-                        <span className="text-slate-600">Route</span>
-                        <span className="font-semibold text-slate-900">
-                            {item.POL} → {item.POD}
-                        </span>
+                    {/* Route */}
+                    <div className="flex justify-between gap-4">
+                      <span className="text-slate-600">
+                        Route
+                      </span>
+
+                      <span className="text-right font-semibold text-slate-900">
+                        {item.POL} → {item.POD}
+                      </span>
                     </div>
 
-                    <div className="flex justify-between">
-                        <span className="text-gray-500">Laycan</span>
-                        <span className="font-semibold text-slate-900">
-                            {item.LAYCAN ?? "-"}
-                        </span>
+                    {/* Distance */}
+                    <div className="flex justify-between gap-4">
+                      <span className="text-slate-600">
+                        Distance
+                      </span>
+
+                      <span className="font-semibold text-slate-900">
+                        {item.DISTANCE || "-"} NM
+                      </span>
                     </div>
 
-                    <div className="flex justify-between">
-                        <span className="text-slate-600">Freight</span>
-                        <span className="text-lg font-bold text-[#0A2F35]">
-                            {item.FREIGHT ?? "-"}
-                        </span>
+                    {/* Laycan */}
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-500">
+                        Laycan
+                      </span>
+
+                      <span className="font-semibold text-slate-900">
+                        {item.LAYCAN ?? "-"}
+                      </span>
+                    </div>
+
+                    {/* Freight */}
+                    <div className="flex justify-between gap-4">
+                      <span className="text-slate-600">
+                        Freight
+                      </span>
+
+                      <span className="text-lg font-bold text-[#0A2F35]">
+                        {item.FREIGHT ?? "-"}
+                      </span>
                     </div>
 
                   </div>
+
                 </div>
+
               ))}
+
             </div>
 
+            {/* BUTTON */}
             <div className="mt-8 flex justify-end gap-3">
 
               <button
                 onClick={() => {
-                const text =
+
+                  const text =
                     "🚢 AVAILABLE SHIPMENT FMLS\n\n" +
+
                     selectedCargo
-                        .map((item, index) => {
-return (`${index + 1}. Cargo      : ${item.CARGO}
+                      .map((item, index) => {
+
+                        return `${index + 1}. Cargo      : ${item.CARGO}
 Size       : ${item.SIZE}
 Route      : ${item.POL} → ${item.POD}
+Distance   : ${item.DISTANCE || "-"} NM
 Laycan     : ${item.LAYCAN ?? "-"}
-Freight    : ${item.FREIGHT ?? "-"}`
-                            );
-                        })
-                        .join("\n\n──────────────────────────────\n\n");                   
+Budget Shipper : ${item.FREIGHT ?? "-"}`;
+
+                      })
+                      .join(
+                        "\n\n──────────────────────────────\n\n"
+                      );
 
                   navigator.clipboard.writeText(text);
 
                   alert("Copied successfully!");
+
                 }}
                 className="rounded-xl bg-[#0B3D68] px-6 py-3 font-semibold text-white transition hover:bg-[#0F4C81]"
               >
@@ -249,6 +312,7 @@ Freight    : ${item.FREIGHT ?? "-"}`
             </div>
 
           </div>
+
         </div>
       )}
 
