@@ -10,6 +10,10 @@ export async function GET() {
       cache: "no-store",
     });
 
+    if (!response.ok) {
+      throw new Error("Gagal mengambil data Google Sheet");
+    }
+
     const csv = await response.text();
 
     const result = Papa.parse(csv, {
@@ -17,13 +21,19 @@ export async function GET() {
       skipEmptyLines: true,
     });
 
-    return NextResponse.json(result.data);
+    const data = (result.data as any[]).map((item, index) => ({
+      ...item,
+      _row: index + 2,
+    }));
+
+    return NextResponse.json(data);
   } catch (error) {
+    console.error("VESSEL API ERROR:", error);
+
     return NextResponse.json(
       {
         success: false,
         message: "Gagal membaca Google Sheet Vessel",
-        error,
       },
       { status: 500 }
     );
