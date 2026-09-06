@@ -6,22 +6,38 @@ const ADMIN_TOKEN = process.env.ADMIN_TOKEN;
 
 export async function POST(request: Request) {
   try {
-    // ==============================
-    // CHECK ENVIRONMENT VARIABLES
-    // ==============================
-    if (!APPS_SCRIPT_URL || !ADMIN_PASSWORD || !ADMIN_TOKEN) {
+    console.log("=== ADMIN API START ===");
+
+    if (!APPS_SCRIPT_URL) {
       return NextResponse.json(
         {
           success: false,
-          message: "Admin API belum dikonfigurasi",
+          message: "GOOGLE_APPS_SCRIPT_URL belum terbaca di Vercel",
         },
         { status: 500 }
       );
     }
 
-    // ==============================
-    // READ REQUEST
-    // ==============================
+    if (!ADMIN_PASSWORD) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "ADMIN_PASSWORD belum terbaca di Vercel",
+        },
+        { status: 500 }
+      );
+    }
+
+    if (!ADMIN_TOKEN) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "ADMIN_TOKEN belum terbaca di Vercel",
+        },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
 
     const {
@@ -30,9 +46,12 @@ export async function POST(request: Request) {
       data,
     } = body;
 
-    // ==============================
-    // CHECK ADMIN PASSWORD
-    // ==============================
+    console.log("Action:", action);
+
+    // =========================
+    // CEK PASSWORD ADMIN
+    // =========================
+
     if (!password || password !== ADMIN_PASSWORD) {
       return NextResponse.json(
         {
@@ -43,14 +62,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // ==============================
-    // ALLOWED ACTION
-    // ==============================
+    // =========================
+    // CEK ACTION
+    // =========================
+
     const allowedActions = [
       "add_vessel",
       "update_vessel",
       "delete_vessel",
-
       "add_cargo",
       "update_cargo",
       "delete_cargo",
@@ -60,57 +79,87 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Action tidak valid",
+          message: `Action tidak valid: ${action}`,
         },
         { status: 400 }
       );
     }
 
-    // ==============================
-    // SEND TO GOOGLE APPS SCRIPT
-    // ==============================
+    // =========================
+    // KIRIM KE GOOGLE APPS SCRIPT
+    // =========================
+
+    console.log("Menghubungi Google Apps Script...");
+
     const response = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-
       headers: {
         "Content-Type": "application/json",
       },
-
       body: JSON.stringify({
         token: ADMIN_TOKEN,
         action,
         data,
       }),
-
       cache: "no-store",
     });
 
-    // ==============================
-    // READ RESPONSE
-    // ==============================
-    const result = await response.json();
+    console.log("Apps Script status:", response.status);
+
+    // Ambil sebagai TEXT dulu
+    // supaya kalau Apps Script mengembalikan HTML/error,
+    // kita bisa melihat isinya.
+    const responseText = await response.text();
+
+    console.log("Apps Script response:", responseText);
+
+    // =========================
+    // CEK RESPONSE
+    // =========================
 
     if (!response.ok) {
       return NextResponse.json(
         {
           success: false,
-          message:
-            result?.message ||
-            "Gagal menghubungi Google Apps Script",
+          message: `Google Apps Script error (${response.status})`,
+          detail: responseText.slice(0, 1000),
         },
         { status: 500 }
       );
     }
 
+    // =========================
+    // PARSE JSON
+    // =========================
+
+    let result;
+
+    try {
+      result = JSON.parse(responseText);
+    } catch {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Google Apps Script tidak mengembalikan JSON",
+          detail: responseText.slice(0, 1000),
+        },
+        { status: 500 }
+      );
+    }
+
+    // =========================
+    // RETURN
+    // =========================
+
     return NextResponse.json(result);
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("ADMIN API ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Terjadi kesalahan pada Admin API",
+        message: error?.message || "Terjadi kesalahan pada Admin API",
       },
       { status: 500 }
     );

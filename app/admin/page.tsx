@@ -936,8 +936,8 @@ export default function AdminPage() {
                   "BAUXITE",
                   "NICKEL",
                   "SAND",
-                  "SPLIT",
-                  "OTHER",
+                  "SPLIT",                  
+                  "IRON ORE",
                 ]}
                 onChange={(value) =>
                   setCargoForm({
