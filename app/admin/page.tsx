@@ -15,17 +15,26 @@ type Vessel = {
 
 type Cargo = {
   ID: string;
-  STATUS: string;
-  CARGO: string;
-  SIZE: string;
-  AREA: string;
+  DATE: string;
+  SALES_MAESTRO: string;
+  NAMA_PT: string;
+  KEC: string;
+  KAB: string;
+  FROM: string;
+  SIZE_BARGE: string;
+  AREA_POL: string;
   POL: string;
   POD: string;
   DISTANCE: string;
-  ROUTE: string;
-  DETAIL: string;
-  INQUIRY: string;
-  _row?: number;
+  CARGO: string;
+  FREIGHT_SHIPPER: string;
+  LAYCAN: string;
+  PRORATE: string;
+  DEMURRAGE: string;
+  PAYMENT: string;
+  OUT_FEE: string;
+  STATUS: string;
+  REMARKS: string;
 };
 
 type Tab = "VESSEL" | "CARGO";
@@ -42,16 +51,26 @@ const emptyVessel: Vessel = {
 
 const emptyCargo: Cargo = {
   ID: "",
-  STATUS: "OPEN",
-  CARGO: "",
-  SIZE: "",
-  AREA: "",
+  DATE: "",
+  SALES_MAESTRO: "",
+  NAMA_PT: "",
+  KEC: "",
+  KAB: "",
+  FROM: "",
+  SIZE_BARGE: "",
+  AREA_POL: "",
   POL: "",
   POD: "",
   DISTANCE: "",
-  ROUTE: "",
-  DETAIL: "",
-  INQUIRY: "",
+  CARGO: "",
+  FREIGHT_SHIPPER: "",
+  LAYCAN: "",
+  PRORATE: "",
+  DEMURRAGE: "",
+  PAYMENT: "",
+  OUT_FEE: "",
+  STATUS: "OPEN",
+  REMARKS: "",
 };
 
 export default function AdminPage() {
@@ -92,19 +111,27 @@ export default function AdminPage() {
 
     try {
       const [vesselRes, cargoRes] = await Promise.all([
-        fetch("/api/vessel", { cache: "no-store" }),
-        fetch("/api/cargo", { cache: "no-store" }),
+        fetch("/api/vessel", {
+          cache: "no-store",
+        }),
+        fetch("/api/cargo", {
+          cache: "no-store",
+        }),
       ]);
 
       const vesselData = await vesselRes.json();
       const cargoData = await cargoRes.json();
 
       setVessels(
-        Array.isArray(vesselData) ? vesselData : []
+        Array.isArray(vesselData)
+          ? vesselData
+          : []
       );
 
       setCargo(
-        Array.isArray(cargoData) ? cargoData : []
+        Array.isArray(cargoData)
+          ? cargoData
+          : []
       );
     } catch (error) {
       console.error(error);
@@ -152,7 +179,9 @@ export default function AdminPage() {
         );
       }
 
-      setMessage(result.message || "Berhasil");
+      setMessage(
+        result.message || "Berhasil"
+      );
 
       await loadData();
 
@@ -161,7 +190,8 @@ export default function AdminPage() {
       console.error(error);
 
       setMessage(
-        error?.message || "Terjadi kesalahan"
+        error?.message ||
+          "Terjadi kesalahan"
       );
 
       return false;
@@ -176,7 +206,9 @@ export default function AdminPage() {
 
   function handleLogin() {
     if (!password.trim()) {
-      setMessage("Masukkan password admin");
+      setMessage(
+        "Masukkan password admin"
+      );
       return;
     }
 
@@ -190,14 +222,20 @@ export default function AdminPage() {
 
   function openAddVessel() {
     setEditingVessel(null);
+
     setVesselForm({
       ...emptyVessel,
-      DATE: new Date().toLocaleDateString("en-GB"),
+      DATE: new Date().toLocaleDateString(
+        "en-GB"
+      ),
     });
+
     setShowVesselForm(true);
   }
 
-  function openEditVessel(item: Vessel) {
+  function openEditVessel(
+    item: Vessel
+  ) {
     setEditingVessel(item);
 
     setVesselForm({
@@ -208,8 +246,13 @@ export default function AdminPage() {
   }
 
   async function saveVessel() {
-    if (!vesselForm.TYPE || !vesselForm.SIZE) {
-      setMessage("TYPE dan SIZE wajib diisi");
+    if (
+      !vesselForm.TYPE ||
+      !vesselForm.SIZE
+    ) {
+      setMessage(
+        "TYPE dan SIZE wajib diisi"
+      );
       return;
     }
 
@@ -224,10 +267,11 @@ export default function AdminPage() {
         }
       : vesselForm;
 
-    const success = await adminRequest(
-      action,
-      data
-    );
+    const success =
+      await adminRequest(
+        action,
+        data
+      );
 
     if (success) {
       setShowVesselForm(false);
@@ -236,18 +280,24 @@ export default function AdminPage() {
     }
   }
 
-  async function deleteVessel(item: Vessel) {
+  async function deleteVessel(
+    item: Vessel
+  ) {
     if (!item._row) return;
 
-    const confirmDelete = window.confirm(
-      `Hapus vessel ${item.TYPE} ${item.SIZE}?`
-    );
+    const confirmDelete =
+      window.confirm(
+        `Hapus vessel ${item.TYPE} ${item.SIZE}?`
+      );
 
     if (!confirmDelete) return;
 
-    await adminRequest("delete_vessel", {
-      row: item._row,
-    });
+    await adminRequest(
+      "delete_vessel",
+      {
+        row: item._row,
+      }
+    );
   }
 
   // =========================
@@ -259,16 +309,22 @@ export default function AdminPage() {
 
     setCargoForm({
       ...emptyCargo,
-      ID: `CARGO-${Date.now()}`,
+      ID: "",
+      DATE: new Date().toLocaleDateString(
+        "en-GB"
+      ),
     });
 
     setShowCargoForm(true);
   }
 
-  function openEditCargo(item: Cargo) {
+  function openEditCargo(
+    item: Cargo
+  ) {
     setEditingCargo(item);
 
     setCargoForm({
+      ...emptyCargo,
       ...item,
     });
 
@@ -276,8 +332,13 @@ export default function AdminPage() {
   }
 
   async function saveCargo() {
-    if (!cargoForm.CARGO || !cargoForm.SIZE) {
-      setMessage("CARGO dan SIZE wajib diisi");
+    if (
+      !cargoForm.CARGO ||
+      !cargoForm.SIZE_BARGE
+    ) {
+      setMessage(
+        "CARGO dan SIZE BARGE wajib diisi"
+      );
       return;
     }
 
@@ -288,14 +349,18 @@ export default function AdminPage() {
     const data = editingCargo
       ? {
           ...cargoForm,
-          row: editingCargo._row,
+          ID: editingCargo.ID,
         }
-      : cargoForm;
+      : {
+          ...cargoForm,
+          ID: "",
+        };
 
-    const success = await adminRequest(
-      action,
-      data
-    );
+    const success =
+      await adminRequest(
+        action,
+        data
+      );
 
     if (success) {
       setShowCargoForm(false);
@@ -304,18 +369,24 @@ export default function AdminPage() {
     }
   }
 
-  async function deleteCargo(item: Cargo) {
-    if (!item._row) return;
+  async function deleteCargo(
+    item: Cargo
+  ) {
+    if (!item.ID) return;
 
-    const confirmDelete = window.confirm(
-      `Hapus cargo ${item.CARGO} ${item.SIZE}?`
-    );
+    const confirmDelete =
+      window.confirm(
+        `Hapus cargo ${item.CARGO} ${item.SIZE_BARGE}?`
+      );
 
     if (!confirmDelete) return;
 
-    await adminRequest("delete_cargo", {
-      row: item._row,
-    });
+    await adminRequest(
+      "delete_cargo",
+      {
+        ID: item.ID,
+      }
+    );
   }
 
   // =========================
@@ -326,6 +397,7 @@ export default function AdminPage() {
     return (
       <main className="min-h-screen bg-slate-950 flex items-center justify-center px-5">
         <div className="w-full max-w-md bg-white rounded-3xl p-7 shadow-2xl">
+
           <div className="text-center mb-7">
             <div className="text-4xl mb-3">
               🚢
@@ -348,7 +420,9 @@ export default function AdminPage() {
             type="password"
             value={password}
             onChange={(e) =>
-              setPassword(e.target.value)
+              setPassword(
+                e.target.value
+              )
             }
             onKeyDown={(e) => {
               if (e.key === "Enter") {
@@ -389,10 +463,12 @@ export default function AdminPage() {
 
   return (
     <main className="min-h-screen bg-slate-100">
+
       {/* HEADER */}
 
       <header className="bg-slate-950 text-white sticky top-0 z-40 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+
           <div>
             <h1 className="font-bold text-lg">
               FAWAID ADMIN
@@ -404,6 +480,7 @@ export default function AdminPage() {
           </div>
 
           <div className="flex gap-2">
+
             <button
               onClick={loadData}
               disabled={loading}
@@ -421,6 +498,7 @@ export default function AdminPage() {
             >
               Logout
             </button>
+
           </div>
         </div>
       </header>
@@ -437,16 +515,18 @@ export default function AdminPage() {
           </h2>
 
           <p className="text-sm text-slate-500 mt-1">
-            Kelola OPEN VESSEL dan OPEN CARGO langsung
-            dari sini.
+            Kelola OPEN VESSEL dan DATA MARKET dari sini.
           </p>
         </div>
 
         {/* TABS */}
 
         <div className="bg-white rounded-2xl p-2 shadow-sm flex gap-2 mb-6">
+
           <button
-            onClick={() => setTab("VESSEL")}
+            onClick={() =>
+              setTab("VESSEL")
+            }
             className={`flex-1 py-3 rounded-xl font-bold text-sm ${
               tab === "VESSEL"
                 ? "bg-blue-600 text-white"
@@ -457,7 +537,9 @@ export default function AdminPage() {
           </button>
 
           <button
-            onClick={() => setTab("CARGO")}
+            onClick={() =>
+              setTab("CARGO")
+            }
             className={`flex-1 py-3 rounded-xl font-bold text-sm ${
               tab === "CARGO"
                 ? "bg-orange-500 text-white"
@@ -466,6 +548,7 @@ export default function AdminPage() {
           >
             📦 CARGO
           </button>
+
         </div>
 
         {/* MESSAGE */}
@@ -484,6 +567,7 @@ export default function AdminPage() {
           <section>
 
             <div className="flex items-center justify-between mb-4">
+
               <div>
                 <h3 className="text-xl font-bold text-slate-900">
                   OPEN VESSEL
@@ -500,6 +584,7 @@ export default function AdminPage() {
               >
                 + ADD VESSEL
               </button>
+
             </div>
 
             {loading ? (
@@ -512,92 +597,115 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="grid gap-4">
-                {vessels.map((item, index) => (
-                  <div
-                    key={item._row || index}
-                    className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-                      <div className="flex-1">
-                        <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                            {item.TYPE || "-"}
-                          </span>
+                {vessels.map(
+                  (item, index) => (
+                    <div
+                      key={
+                        item._row ||
+                        index
+                      }
+                      className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4"
+                    >
 
-                          <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                            {item.SIZE || "-"}
-                          </span>
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                        <div className="flex-1">
+
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+
+                            <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                              {item.TYPE || "-"}
+                            </span>
+
+                            <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                              {item.SIZE || "-"}
+                            </span>
+
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+
+                            <div>
+                              <span className="text-slate-400">
+                                Position
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.POSITION || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Available
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item["AVAILABLE DATE"] || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Next Port
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item["NEXT PORT"] || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Date
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.DATE || "-"}
+                              </p>
+                            </div>
+
+                          </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <span className="text-slate-400">
-                              Position
-                            </span>
+                        <div className="flex gap-2">
 
-                            <p className="font-semibold text-slate-900">
-                              {item.POSITION || "-"}
-                            </p>
-                          </div>
+                          <button
+                            onClick={() =>
+                              openEditVessel(
+                                item
+                              )
+                            }
+                            className="flex-1 md:flex-none bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold"
+                          >
+                            ✏️ EDIT
+                          </button>
 
-                          <div>
-                            <span className="text-slate-400">
-                              Available
-                            </span>
+                          <button
+                            onClick={() =>
+                              deleteVessel(
+                                item
+                              )
+                            }
+                            disabled={
+                              saving
+                            }
+                            className="flex-1 md:flex-none bg-red-100 text-red-600 px-4 py-2.5 rounded-xl text-sm font-bold"
+                          >
+                            🗑️ DELETE
+                          </button>
 
-                            <p className="font-semibold text-slate-900">
-                              {item["AVAILABLE DATE"] || "-"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <span className="text-slate-400">
-                              Next Port
-                            </span>
-
-                            <p className="font-semibold text-slate-900">
-                              {item["NEXT PORT"] || "-"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <span className="text-slate-400">
-                              Date
-                            </span>
-
-                            <p className="font-semibold text-slate-900">
-                              {item.DATE || "-"}
-                            </p>
-                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() =>
-                            openEditVessel(item)
-                          }
-                          className="flex-1 md:flex-none bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold"
-                        >
-                          ✏️ EDIT
-                        </button>
-
-                        <button
-                          onClick={() =>
-                            deleteVessel(item)
-                          }
-                          disabled={saving}
-                          className="flex-1 md:flex-none bg-red-100 text-red-600 px-4 py-2.5 rounded-xl text-sm font-bold"
-                        >
-                          🗑️ DELETE
-                        </button>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
+
               </div>
             )}
+
           </section>
         )}
 
@@ -609,9 +717,10 @@ export default function AdminPage() {
           <section>
 
             <div className="flex items-center justify-between mb-4">
+
               <div>
                 <h3 className="text-xl font-bold text-slate-900">
-                  OPEN CARGO / SHIPMENT
+                  DATA MARKET / CARGO
                 </h3>
 
                 <p className="text-sm text-slate-500">
@@ -620,11 +729,14 @@ export default function AdminPage() {
               </div>
 
               <button
-                onClick={openAddCargo}
+                onClick={
+                  openAddCargo
+                }
                 className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-3 rounded-xl text-sm"
               >
                 + ADD CARGO
               </button>
+
             </div>
 
             {loading ? (
@@ -637,106 +749,196 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="grid gap-4">
-                {cargo.map((item, index) => (
-                  <div
-                    key={item._row || index}
-                    className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-                      <div className="flex-1">
-                        <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <span className="bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                            {item.CARGO || "-"}
-                          </span>
+                {cargo.map(
+                  (item, index) => (
+                    <div
+                      key={
+                        item.ID ||
+                        index
+                      }
+                      className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4"
+                    >
 
-                          <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                            {item.SIZE || "-"}
-                          </span>
+                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
-                          <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                            {item.STATUS || "-"}
-                          </span>
+                        <div className="flex-1">
+
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+
+                            <span className="bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                              {item.CARGO || "-"}
+                            </span>
+
+                            <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                              {item.SIZE_BARGE || "-"}
+                            </span>
+
+                            <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                              {item.STATUS || "-"}
+                            </span>
+
+                          </div>
+
+                          <div className="text-lg font-bold text-slate-900 mb-2">
+
+                            {item.POL || "-"}
+
+                            <span className="mx-2 text-slate-400">
+                              →
+                            </span>
+
+                            {item.POD || "-"}
+
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+
+                            <div>
+                              <span className="text-slate-400">
+                                ID
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.ID || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Company
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.NAMA_PT || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Sales Maestro
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.SALES_MAESTRO || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                From
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.FROM || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Area POL
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.AREA_POL || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Distance
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.DISTANCE || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Freight
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.FREIGHT_SHIPPER || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Laycan
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.LAYCAN || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Payment
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.PAYMENT || "-"}
+                              </p>
+                            </div>
+
+                            <div>
+                              <span className="text-slate-400">
+                                Remark
+                              </span>
+
+                              <p className="font-semibold text-slate-900">
+                                {item.REMARKS || "-"}
+                              </p>
+                            </div>
+
+                          </div>
+
                         </div>
 
-                        <div className="text-lg font-bold text-slate-900 mb-2">
-                          {item.POL || "-"}
-                          <span className="mx-2 text-slate-400">
-                            →
-                          </span>
-                          {item.POD || "-"}
+                        <div className="flex gap-2">
+
+                          <button
+                            onClick={() =>
+                              openEditCargo(
+                                item
+                              )
+                            }
+                            className="flex-1 md:flex-none bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold"
+                          >
+                            ✏️ EDIT
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              deleteCargo(
+                                item
+                              )
+                            }
+                            disabled={
+                              saving
+                            }
+                            className="flex-1 md:flex-none bg-red-100 text-red-600 px-4 py-2.5 rounded-xl text-sm font-bold"
+                          >
+                            🗑️ DELETE
+                          </button>
+
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <span className="text-slate-400">
-                              ID
-                            </span>
-
-                            <p className="font-semibold text-slate-900">
-                              {item.ID || "-"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <span className="text-slate-400">
-                              Area
-                            </span>
-
-                            <p className="font-semibold text-slate-900">
-                              {item.AREA || "-"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <span className="text-slate-400">
-                              Distance
-                            </span>
-
-                            <p className="font-semibold text-slate-900">
-                              {item.DISTANCE || "-"}
-                            </p>
-                          </div>
-
-                          <div>
-                            <span className="text-slate-400">
-                              Route
-                            </span>
-
-                            <p className="font-semibold text-slate-900">
-                              {item.ROUTE || "-"}
-                            </p>
-                          </div>
-                        </div>
                       </div>
 
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() =>
-                            openEditCargo(item)
-                          }
-                          className="flex-1 md:flex-none bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold"
-                        >
-                          ✏️ EDIT
-                        </button>
-
-                        <button
-                          onClick={() =>
-                            deleteCargo(item)
-                          }
-                          disabled={saving}
-                          className="flex-1 md:flex-none bg-red-100 text-red-600 px-4 py-2.5 rounded-xl text-sm font-bold"
-                        >
-                          🗑️ DELETE
-                        </button>
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
+
               </div>
             )}
+
           </section>
         )}
+
       </div>
 
       {/* ===================== */}
@@ -745,9 +947,11 @@ export default function AdminPage() {
 
       {showVesselForm && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+
           <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-5">
 
             <div className="flex items-center justify-between mb-5">
+
               <div>
                 <h3 className="text-xl font-bold text-slate-900">
                   {editingVessel
@@ -762,19 +966,24 @@ export default function AdminPage() {
 
               <button
                 onClick={() =>
-                  setShowVesselForm(false)
+                  setShowVesselForm(
+                    false
+                  )
                 }
                 className="text-slate-500 text-xl"
               >
                 ✕
               </button>
+
             </div>
 
             <div className="grid gap-4">
 
               <Input
                 label="DATE"
-                value={vesselForm.DATE}
+                value={
+                  vesselForm.DATE
+                }
                 onChange={(value) =>
                   setVesselForm({
                     ...vesselForm,
@@ -785,8 +994,13 @@ export default function AdminPage() {
 
               <Select
                 label="TYPE"
-                value={vesselForm.TYPE}
-                options={["BARGE", "MV"]}
+                value={
+                  vesselForm.TYPE
+                }
+                options={[
+                  "BARGE",
+                  "MV",
+                ]}
                 onChange={(value) =>
                   setVesselForm({
                     ...vesselForm,
@@ -797,7 +1011,9 @@ export default function AdminPage() {
 
               <Input
                 label="SIZE"
-                value={vesselForm.SIZE}
+                value={
+                  vesselForm.SIZE
+                }
                 onChange={(value) =>
                   setVesselForm({
                     ...vesselForm,
@@ -809,7 +1025,9 @@ export default function AdminPage() {
 
               <Input
                 label="POSITION"
-                value={vesselForm.POSITION}
+                value={
+                  vesselForm.POSITION
+                }
                 onChange={(value) =>
                   setVesselForm({
                     ...vesselForm,
@@ -820,29 +1038,41 @@ export default function AdminPage() {
 
               <Input
                 label="AVAILABLE DATE"
-                value={vesselForm["AVAILABLE DATE"]}
+                value={
+                  vesselForm[
+                    "AVAILABLE DATE"
+                  ]
+                }
                 onChange={(value) =>
                   setVesselForm({
                     ...vesselForm,
-                    "AVAILABLE DATE": value,
+                    "AVAILABLE DATE":
+                      value,
                   })
                 }
               />
 
               <Input
                 label="NEXT PORT"
-                value={vesselForm["NEXT PORT"]}
+                value={
+                  vesselForm[
+                    "NEXT PORT"
+                  ]
+                }
                 onChange={(value) =>
                   setVesselForm({
                     ...vesselForm,
-                    "NEXT PORT": value,
+                    "NEXT PORT":
+                      value,
                   })
                 }
               />
 
               <Input
                 label="INQUIRY"
-                value={vesselForm.INQUIRY}
+                value={
+                  vesselForm.INQUIRY
+                }
                 onChange={(value) =>
                   setVesselForm({
                     ...vesselForm,
@@ -853,7 +1083,9 @@ export default function AdminPage() {
               />
 
               <button
-                onClick={saveVessel}
+                onClick={
+                  saveVessel
+                }
                 disabled={saving}
                 className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-3 rounded-xl mt-2"
               >
@@ -863,6 +1095,7 @@ export default function AdminPage() {
                   ? "UPDATE VESSEL"
                   : "ADD VESSEL"}
               </button>
+
             </div>
           </div>
         </div>
@@ -874,9 +1107,11 @@ export default function AdminPage() {
 
       {showCargoForm && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-5">
+
+          <div className="bg-white w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-3xl p-5">
 
             <div className="flex items-center justify-between mb-5">
+
               <div>
                 <h3 className="text-xl font-bold text-slate-900">
                   {editingCargo
@@ -885,36 +1120,336 @@ export default function AdminPage() {
                 </h3>
 
                 <p className="text-sm text-slate-500">
-                  Isi informasi cargo / shipment
+                  DATA MARKET — Master Cargo
                 </p>
               </div>
 
               <button
                 onClick={() =>
-                  setShowCargoForm(false)
+                  setShowCargoForm(
+                    false
+                  )
                 }
                 className="text-slate-500 text-xl"
               >
                 ✕
               </button>
+
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              {/* ID */}
 
               <Input
                 label="ID"
-                value={cargoForm.ID}
+                value={
+                  cargoForm.ID
+                }
+                onChange={() => {}}
+                placeholder={
+                  editingCargo
+                    ? "ID Cargo"
+                    : "Otomatis"
+                }
+              />
+
+              {/* DATE */}
+
+              <Input
+                label="DATE"
+                value={
+                  cargoForm.DATE
+                }
                 onChange={(value) =>
                   setCargoForm({
                     ...cargoForm,
-                    ID: value,
+                    DATE: value,
                   })
                 }
               />
 
+              {/* SALES MAESTRO */}
+
+              <Input
+                label="SALES MAESTRO"
+                value={
+                  cargoForm.SALES_MAESTRO
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    SALES_MAESTRO:
+                      value,
+                  })
+                }
+              />
+
+              {/* NAMA PT */}
+
+              <Input
+                label="NAMA PT"
+                value={
+                  cargoForm.NAMA_PT
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    NAMA_PT:
+                      value,
+                  })
+                }
+              />
+
+              {/* KEC */}
+
+              <Input
+                label="KEC"
+                value={
+                  cargoForm.KEC
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    KEC: value,
+                  })
+                }
+              />
+
+              {/* KAB */}
+
+              <Input
+                label="KAB"
+                value={
+                  cargoForm.KAB
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    KAB: value,
+                  })
+                }
+              />
+
+              {/* FROM */}
+
+              <Input
+                label="FROM"
+                value={
+                  cargoForm.FROM
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    FROM: value,
+                  })
+                }
+              />
+
+              {/* SIZE BARGE */}
+
+              <Input
+                label="SIZE BARGE"
+                value={
+                  cargoForm.SIZE_BARGE
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    SIZE_BARGE:
+                      value,
+                  })
+                }
+                placeholder="Contoh: 300 FT"
+              />
+
+              {/* AREA POL */}
+
+              <Input
+                label="AREA POL"
+                value={
+                  cargoForm.AREA_POL
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    AREA_POL:
+                      value,
+                  })
+                }
+              />
+
+              {/* POL */}
+
+              <Input
+                label="POL"
+                value={
+                  cargoForm.POL
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    POL: value,
+                  })
+                }
+              />
+
+              {/* POD */}
+
+              <Input
+                label="POD"
+                value={
+                  cargoForm.POD
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    POD: value,
+                  })
+                }
+              />
+
+              {/* DISTANCE */}
+
+              <Input
+                label="DISTANCE"
+                value={
+                  cargoForm.DISTANCE
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    DISTANCE:
+                      value,
+                  })
+                }
+                placeholder="Contoh: 525 NM"
+              />
+
+              {/* CARGO */}
+
+              <Select
+                label="CARGO"
+                value={
+                  cargoForm.CARGO
+                }
+                options={[
+                  "COAL",
+                  "BAUXITE",
+                  "NICKEL",
+                  "SAND",
+                  "SPLIT",
+                  "IRON ORE",
+                ]}
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    CARGO: value,
+                  })
+                }
+              />
+
+              {/* FREIGHT */}
+
+              <Input
+                label="FREIGHT SHIPPER"
+                value={
+                  cargoForm.FREIGHT_SHIPPER
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    FREIGHT_SHIPPER:
+                      value,
+                  })
+                }
+              />
+
+              {/* LAYCAN */}
+
+              <Input
+                label="LAYCAN"
+                value={
+                  cargoForm.LAYCAN
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    LAYCAN: value,
+                  })
+                }
+                placeholder="Contoh: 10-15 Sep 2026"
+              />
+
+              {/* PRORATE */}
+
+              <Input
+                label="PRORATE"
+                value={
+                  cargoForm.PRORATE
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    PRORATE: value,
+                  })
+                }
+              />
+
+              {/* DEMURRAGE */}
+
+              <Input
+                label="DEMURRAGE"
+                value={
+                  cargoForm.DEMURRAGE
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    DEMURRAGE:
+                      value,
+                  })
+                }
+              />
+
+              {/* PAYMENT */}
+
+              <Input
+                label="PAYMENT"
+                value={
+                  cargoForm.PAYMENT
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    PAYMENT: value,
+                  })
+                }
+              />
+
+              {/* OUT FEE */}
+
+              <Input
+                label="OUT FEE"
+                value={
+                  cargoForm.OUT_FEE
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    OUT_FEE:
+                      value,
+                  })
+                }
+              />
+
+              {/* STATUS */}
+
               <Select
                 label="STATUS"
-                value={cargoForm.STATUS}
+                value={
+                  cargoForm.STATUS
+                }
                 options={[
                   "OPEN",
                   "PENDING",
@@ -928,131 +1463,48 @@ export default function AdminPage() {
                 }
               />
 
-              <Select
-                label="CARGO"
-                value={cargoForm.CARGO}
-                options={[
-                  "COAL",
-                  "BAUXITE",
-                  "NICKEL",
-                  "SAND",
-                  "SPLIT",                  
-                  "IRON ORE",
-                ]}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    CARGO: value,
-                  })
-                }
-              />
+              {/* REMARKS */}
 
-              <Input
-                label="SIZE"
-                value={cargoForm.SIZE}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    SIZE: value,
-                  })
-                }
-                placeholder="Contoh: 300 FT"
-              />
+              <div className="md:col-span-2">
 
-              <Input
-                label="AREA"
-                value={cargoForm.AREA}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    AREA: value,
-                  })
-                }
-              />
+                <Textarea
+                  label="REMARKS / NOTE"
+                  value={
+                    cargoForm.REMARKS
+                  }
+                  onChange={(value) =>
+                    setCargoForm({
+                      ...cargoForm,
+                      REMARKS:
+                        value,
+                    })
+                  }
+                />
 
-              <Input
-                label="POL"
-                value={cargoForm.POL}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    POL: value,
-                  })
-                }
-              />
+              </div>
 
-              <Input
-                label="POD"
-                value={cargoForm.POD}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    POD: value,
-                  })
-                }
-              />
-
-              <Input
-                label="DISTANCE"
-                value={cargoForm.DISTANCE}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    DISTANCE: value,
-                  })
-                }
-                placeholder="Contoh: 525 NM"
-              />
-
-              <Input
-                label="ROUTE"
-                value={cargoForm.ROUTE}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    ROUTE: value,
-                  })
-                }
-              />
-
-              <Textarea
-                label="DETAIL"
-                value={cargoForm.DETAIL}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    DETAIL: value,
-                  })
-                }
-              />
-
-              <Input
-                label="INQUIRY"
-                value={cargoForm.INQUIRY}
-                onChange={(value) =>
-                  setCargoForm({
-                    ...cargoForm,
-                    INQUIRY: value,
-                  })
-                }
-                placeholder="Nomor / link WhatsApp"
-              />
-
-              <button
-                onClick={saveCargo}
-                disabled={saving}
-                className="bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl mt-2"
-              >
-                {saving
-                  ? "MENYIMPAN..."
-                  : editingCargo
-                  ? "UPDATE CARGO"
-                  : "ADD CARGO"}
-              </button>
             </div>
+
+            {/* SAVE */}
+
+            <button
+              onClick={
+                saveCargo
+              }
+              disabled={saving}
+              className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl mt-5"
+            >
+              {saving
+                ? "MENYIMPAN..."
+                : editingCargo
+                ? "UPDATE CARGO"
+                : "ADD CARGO"}
+            </button>
+
           </div>
         </div>
       )}
+
     </main>
   );
 }
@@ -1069,11 +1521,14 @@ function Input({
 }: {
   label: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (
+    value: string
+  ) => void;
   placeholder?: string;
 }) {
   return (
     <div>
+
       <label className="block text-sm font-semibold text-slate-700 mb-2">
         {label}
       </label>
@@ -1081,11 +1536,16 @@ function Input({
       <input
         value={value || ""}
         onChange={(e) =>
-          onChange(e.target.value)
+          onChange(
+            e.target.value
+          )
         }
-        placeholder={placeholder}
+        placeholder={
+          placeholder
+        }
         className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:ring-2 focus:ring-blue-500"
       />
+
     </div>
   );
 }
@@ -1103,10 +1563,13 @@ function Select({
   label: string;
   value: string;
   options: string[];
-  onChange: (value: string) => void;
+  onChange: (
+    value: string
+  ) => void;
 }) {
   return (
     <div>
+
       <label className="block text-sm font-semibold text-slate-700 mb-2">
         {label}
       </label>
@@ -1114,23 +1577,30 @@ function Select({
       <select
         value={value || ""}
         onChange={(e) =>
-          onChange(e.target.value)
+          onChange(
+            e.target.value
+          )
         }
         className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 bg-white outline-none focus:ring-2 focus:ring-blue-500"
       >
+
         <option value="">
           Select {label}
         </option>
 
-        {options.map((option) => (
-          <option
-            key={option}
-            value={option}
-          >
-            {option}
-          </option>
-        ))}
+        {options.map(
+          (option) => (
+            <option
+              key={option}
+              value={option}
+            >
+              {option}
+            </option>
+          )
+        )}
+
       </select>
+
     </div>
   );
 }
@@ -1146,10 +1616,13 @@ function Textarea({
 }: {
   label: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (
+    value: string
+  ) => void;
 }) {
   return (
     <div>
+
       <label className="block text-sm font-semibold text-slate-700 mb-2">
         {label}
       </label>
@@ -1157,11 +1630,14 @@ function Textarea({
       <textarea
         value={value || ""}
         onChange={(e) =>
-          onChange(e.target.value)
+          onChange(
+            e.target.value
+          )
         }
         rows={4}
         className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
       />
+
     </div>
   );
 }
