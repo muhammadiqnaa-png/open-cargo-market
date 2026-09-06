@@ -283,7 +283,7 @@ export default function InternalPage() {
                         return `${index + 1}. Cargo      : ${item.CARGO}
 Size       : ${item.SIZE}
 Route      : ${item.POL} → ${item.POD}
-Distance   : ${item.DISTANCE || "-"} NM
+Distance   : ${item.DISTANCE || "-"}
 Laycan     : ${item.LAYCAN ?? "-"}
 Budget Shipper : ${item.FREIGHT ?? "-"}`;
 
