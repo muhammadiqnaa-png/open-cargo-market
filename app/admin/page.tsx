@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 
+// =====================================================
+// TYPE VESSEL
+// =====================================================
+
 type Vessel = {
   DATE: string;
   TYPE: string;
@@ -13,6 +17,10 @@ type Vessel = {
   _row?: number;
 };
 
+// =====================================================
+// TYPE DATA MARKET
+// =====================================================
+
 type Cargo = {
   ID: string;
   DATE: string;
@@ -20,6 +28,7 @@ type Cargo = {
   NAMA_PT: string;
   KEC: string;
   KAB: string;
+  PIC: string;
   FROM: string;
   SIZE_BARGE: string;
   AREA_POL: string;
@@ -35,9 +44,18 @@ type Cargo = {
   OUT_FEE: string;
   STATUS: string;
   REMARKS: string;
+  _row?: number;
 };
 
+// =====================================================
+// TAB
+// =====================================================
+
 type Tab = "VESSEL" | "CARGO";
+
+// =====================================================
+// EMPTY VESSEL
+// =====================================================
 
 const emptyVessel: Vessel = {
   DATE: "",
@@ -49,6 +67,10 @@ const emptyVessel: Vessel = {
   INQUIRY: "",
 };
 
+// =====================================================
+// EMPTY CARGO
+// =====================================================
+
 const emptyCargo: Cargo = {
   ID: "",
   DATE: "",
@@ -56,6 +78,7 @@ const emptyCargo: Cargo = {
   NAMA_PT: "",
   KEC: "",
   KAB: "",
+  PIC: "",
   FROM: "",
   SIZE_BARGE: "",
   AREA_POL: "",
@@ -73,17 +96,51 @@ const emptyCargo: Cargo = {
   REMARKS: "",
 };
 
+// =====================================================
+// ADMIN PAGE
+// =====================================================
+
 export default function AdminPage() {
+  // ===================================================
+  // LOGIN
+  // ===================================================
+
   const [password, setPassword] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
-  const [tab, setTab] = useState<Tab>("VESSEL");
+  // ===================================================
+  // TAB
+  // ===================================================
 
-  const [vessels, setVessels] = useState<Vessel[]>([]);
-  const [cargo, setCargo] = useState<Cargo[]>([]);
+  const [tab, setTab] =
+    useState<Tab>("VESSEL");
 
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
+  // ===================================================
+  // DATA
+  // ===================================================
+
+  const [vessels, setVessels] =
+    useState<Vessel[]>([]);
+
+  const [cargo, setCargo] =
+    useState<Cargo[]>([]);
+
+  // ===================================================
+  // STATE
+  // ===================================================
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [saving, setSaving] =
+    useState(false);
+
+  const [message, setMessage] =
+    useState("");
+
+  // ===================================================
+  // EDIT STATE
+  // ===================================================
 
   const [editingVessel, setEditingVessel] =
     useState<Vessel | null>(null);
@@ -91,8 +148,19 @@ export default function AdminPage() {
   const [editingCargo, setEditingCargo] =
     useState<Cargo | null>(null);
 
-  const [showVesselForm, setShowVesselForm] = useState(false);
-  const [showCargoForm, setShowCargoForm] = useState(false);
+  // ===================================================
+  // MODAL
+  // ===================================================
+
+  const [showVesselForm, setShowVesselForm] =
+    useState(false);
+
+  const [showCargoForm, setShowCargoForm] =
+    useState(false);
+
+  // ===================================================
+  // FORM
+  // ===================================================
 
   const [vesselForm, setVesselForm] =
     useState<Vessel>(emptyVessel);
@@ -100,46 +168,92 @@ export default function AdminPage() {
   const [cargoForm, setCargoForm] =
     useState<Cargo>(emptyCargo);
 
-  const [message, setMessage] = useState("");
-
-  // =========================
+  // ===================================================
   // LOAD DATA
-  // =========================
+  // ===================================================
 
   async function loadData() {
     setLoading(true);
+    setMessage("");
 
     try {
-      const [vesselRes, cargoRes] = await Promise.all([
+      const vesselRequest =
         fetch("/api/vessel", {
           cache: "no-store",
-        }),
-        fetch("/api/cargo", {
+        });
+
+      const cargoRequest =
+        fetch("/api/data-market", {
           cache: "no-store",
-        }),
+        });
+
+      const [
+        vesselRes,
+        cargoRes,
+      ] = await Promise.all([
+        vesselRequest,
+        cargoRequest,
       ]);
 
-      const vesselData = await vesselRes.json();
-      const cargoData = await cargoRes.json();
+      // ===============================================
+      // VESSEL RESPONSE
+      // ===============================================
 
-      setVessels(
+      const vesselData =
+        await vesselRes.json();
+
+      // ===============================================
+      // DATA MARKET RESPONSE
+      // ===============================================
+
+      const cargoData =
+        await cargoRes.json();
+
+      // ===============================================
+      // SET VESSEL
+      // ===============================================
+
+      if (
         Array.isArray(vesselData)
-          ? vesselData
-          : []
+      ) {
+        setVessels(vesselData);
+      } else {
+        setVessels([]);
+      }
+
+      // ===============================================
+      // SET CARGO
+      // ===============================================
+
+      if (
+        Array.isArray(cargoData)
+      ) {
+        setCargo(cargoData);
+      } else {
+        setCargo([]);
+      }
+
+    } catch (error) {
+
+      console.error(
+        "LOAD ADMIN DATA ERROR:",
+        error
       );
 
-      setCargo(
-        Array.isArray(cargoData)
-          ? cargoData
-          : []
+      setMessage(
+        "Gagal mengambil data"
       );
-    } catch (error) {
-      console.error(error);
-      setMessage("Gagal mengambil data");
+
     } finally {
+
       setLoading(false);
+
     }
   }
+
+  // ===================================================
+  // LOAD WHEN LOGIN
+  // ===================================================
 
   useEffect(() => {
     if (loggedIn) {
@@ -147,9 +261,9 @@ export default function AdminPage() {
     }
   }, [loggedIn]);
 
-  // =========================
+  // ===================================================
   // ADMIN REQUEST
-  // =========================
+  // ===================================================
 
   async function adminRequest(
     action: string,
@@ -159,56 +273,83 @@ export default function AdminPage() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/admin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          password,
-          action,
-          data,
-        }),
-      });
 
-      const result = await response.json();
+      const response =
+        await fetch(
+          "/api/admin",
+          {
+            method: "POST",
 
-      if (!response.ok || !result.success) {
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              password,
+              action,
+              data,
+            }),
+          }
+        );
+
+      const result =
+        await response.json();
+
+      if (
+        !response.ok ||
+        !result.success
+      ) {
         throw new Error(
-          result.message || "Request gagal"
+          result.message ||
+          "Request gagal"
         );
       }
 
       setMessage(
-        result.message || "Berhasil"
+        result.message ||
+        "Berhasil"
       );
 
       await loadData();
 
       return true;
+
     } catch (error: any) {
-      console.error(error);
+
+      console.error(
+        "ADMIN REQUEST ERROR:",
+        error
+      );
 
       setMessage(
         error?.message ||
-          "Terjadi kesalahan"
+        "Terjadi kesalahan"
       );
 
       return false;
+
     } finally {
+
       setSaving(false);
+
     }
   }
 
-  // =========================
+  // ===================================================
   // LOGIN
-  // =========================
+  // ===================================================
 
   function handleLogin() {
-    if (!password.trim()) {
+
+    if (
+      !password.trim()
+    ) {
+
       setMessage(
         "Masukkan password admin"
       );
+
       return;
     }
 
@@ -216,26 +357,35 @@ export default function AdminPage() {
     setMessage("");
   }
 
-  // =========================
+  // ===================================================
   // VESSEL
-  // =========================
+  // ===================================================
 
   function openAddVessel() {
+
     setEditingVessel(null);
 
     setVesselForm({
       ...emptyVessel,
-      DATE: new Date().toLocaleDateString(
-        "en-GB"
-      ),
+
+      DATE:
+        new Date()
+          .toLocaleDateString(
+            "en-GB"
+          ),
     });
 
     setShowVesselForm(true);
   }
 
+  // ===================================================
+  // EDIT VESSEL
+  // ===================================================
+
   function openEditVessel(
     item: Vessel
   ) {
+
     setEditingVessel(item);
 
     setVesselForm({
@@ -245,27 +395,37 @@ export default function AdminPage() {
     setShowVesselForm(true);
   }
 
+  // ===================================================
+  // SAVE VESSEL
+  // ===================================================
+
   async function saveVessel() {
+
     if (
       !vesselForm.TYPE ||
       !vesselForm.SIZE
     ) {
+
       setMessage(
         "TYPE dan SIZE wajib diisi"
       );
+
       return;
     }
 
-    const action = editingVessel
-      ? "update_vessel"
-      : "add_vessel";
+    const action =
+      editingVessel
+        ? "update_vessel"
+        : "add_vessel";
 
-    const data = editingVessel
-      ? {
-          ...vesselForm,
-          row: editingVessel._row,
-        }
-      : vesselForm;
+    const data =
+      editingVessel
+        ? {
+            ...vesselForm,
+            row:
+              editingVessel._row,
+          }
+        : vesselForm;
 
     const success =
       await adminRequest(
@@ -274,23 +434,37 @@ export default function AdminPage() {
       );
 
     if (success) {
+
       setShowVesselForm(false);
+
       setEditingVessel(null);
-      setVesselForm(emptyVessel);
+
+      setVesselForm(
+        emptyVessel
+      );
     }
   }
+
+  // ===================================================
+  // DELETE VESSEL
+  // ===================================================
 
   async function deleteVessel(
     item: Vessel
   ) {
-    if (!item._row) return;
+
+    if (!item._row) {
+      return;
+    }
 
     const confirmDelete =
       window.confirm(
         `Hapus vessel ${item.TYPE} ${item.SIZE}?`
       );
 
-    if (!confirmDelete) return;
+    if (!confirmDelete) {
+      return;
+    }
 
     await adminRequest(
       "delete_vessel",
@@ -300,27 +474,39 @@ export default function AdminPage() {
     );
   }
 
-  // =========================
+  // ===================================================
   // CARGO
-  // =========================
+  // ===================================================
 
   function openAddCargo() {
+
     setEditingCargo(null);
 
     setCargoForm({
       ...emptyCargo,
+
       ID: "",
-      DATE: new Date().toLocaleDateString(
-        "en-GB"
-      ),
+
+      DATE:
+        new Date()
+          .toLocaleDateString(
+            "en-GB"
+          ),
+
+      STATUS: "OPEN",
     });
 
     setShowCargoForm(true);
   }
 
+  // ===================================================
+  // EDIT CARGO
+  // ===================================================
+
   function openEditCargo(
     item: Cargo
   ) {
+
     setEditingCargo(item);
 
     setCargoForm({
@@ -331,30 +517,81 @@ export default function AdminPage() {
     setShowCargoForm(true);
   }
 
+  // ===================================================
+  // SAVE CARGO
+  // ===================================================
+
   async function saveCargo() {
+
     if (
-      !cargoForm.CARGO ||
-      !cargoForm.SIZE_BARGE
+      !cargoForm.CARGO
     ) {
+
       setMessage(
-        "CARGO dan SIZE BARGE wajib diisi"
+        "CARGO wajib diisi"
       );
+
       return;
     }
 
-    const action = editingCargo
-      ? "update_cargo"
-      : "add_cargo";
+    if (
+      !cargoForm.SIZE_BARGE
+    ) {
 
-    const data = editingCargo
-      ? {
-          ...cargoForm,
-          ID: editingCargo.ID,
-        }
-      : {
-          ...cargoForm,
-          ID: "",
-        };
+      setMessage(
+        "SIZE BARGE wajib diisi"
+      );
+
+      return;
+    }
+
+    if (
+      !cargoForm.POL
+    ) {
+
+      setMessage(
+        "POL wajib diisi"
+      );
+
+      return;
+    }
+
+    if (
+      !cargoForm.POD
+    ) {
+
+      setMessage(
+        "POD wajib diisi"
+      );
+
+      return;
+    }
+
+    const action =
+      editingCargo
+        ? "update_cargo"
+        : "add_cargo";
+
+    // ===============================================
+    // EDIT
+    // ID WAJIB DIPERTAHANKAN
+    // ===============================================
+
+    const data =
+      editingCargo
+        ? {
+            ...cargoForm,
+
+            ID:
+              editingCargo.ID,
+          }
+        : {
+            ...cargoForm,
+
+            // ID dibuat otomatis
+            // oleh Apps Script
+            ID: "",
+          };
 
     const success =
       await adminRequest(
@@ -363,23 +600,42 @@ export default function AdminPage() {
       );
 
     if (success) {
+
       setShowCargoForm(false);
+
       setEditingCargo(null);
-      setCargoForm(emptyCargo);
+
+      setCargoForm(
+        emptyCargo
+      );
     }
   }
+
+  // ===================================================
+  // DELETE CARGO
+  // ===================================================
 
   async function deleteCargo(
     item: Cargo
   ) {
-    if (!item.ID) return;
+
+    if (!item.ID) {
+
+      setMessage(
+        "ID Cargo tidak ditemukan"
+      );
+
+      return;
+    }
 
     const confirmDelete =
       window.confirm(
-        `Hapus cargo ${item.CARGO} ${item.SIZE_BARGE}?`
+        `Hapus cargo ID ${item.ID} - ${item.CARGO} ${item.SIZE_BARGE}?`
       );
 
-    if (!confirmDelete) return;
+    if (!confirmDelete) {
+      return;
+    }
 
     await adminRequest(
       "delete_cargo",
@@ -389,16 +645,21 @@ export default function AdminPage() {
     );
   }
 
-  // =========================
+  // ===================================================
   // LOGIN SCREEN
-  // =========================
+  // ===================================================
 
   if (!loggedIn) {
+
     return (
       <main className="min-h-screen bg-slate-950 flex items-center justify-center px-5">
+
         <div className="w-full max-w-md bg-white rounded-3xl p-7 shadow-2xl">
 
+          {/* LOGO */}
+
           <div className="text-center mb-7">
+
             <div className="text-4xl mb-3">
               🚢
             </div>
@@ -410,7 +671,10 @@ export default function AdminPage() {
             <p className="text-sm text-slate-500 mt-2">
               Shipping Marketplace Management
             </p>
+
           </div>
+
+          {/* PASSWORD */}
 
           <label className="block text-sm font-semibold text-slate-700 mb-2">
             Admin Password
@@ -425,19 +689,29 @@ export default function AdminPage() {
               )
             }
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+
+              if (
+                e.key === "Enter"
+              ) {
                 handleLogin();
               }
+
             }}
             placeholder="Masukkan password"
             className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:ring-2 focus:ring-blue-500"
           />
 
+          {/* MESSAGE */}
+
           {message && (
+
             <p className="text-sm text-red-600 mt-3">
               {message}
             </p>
+
           )}
+
+          {/* LOGIN BUTTON */}
 
           <button
             onClick={handleLogin}
@@ -446,30 +720,38 @@ export default function AdminPage() {
             LOGIN ADMIN
           </button>
 
+          {/* BACK */}
+
           <a
             href="/"
             className="block text-center text-sm text-slate-500 mt-5 hover:text-blue-600"
           >
             ← Kembali ke Marketplace
           </a>
+
         </div>
+
       </main>
     );
   }
 
-  // =========================
-  // ADMIN DASHBOARD
-  // =========================
+  // ===================================================
+  // DASHBOARD
+  // ===================================================
 
   return (
     <main className="min-h-screen bg-slate-100">
 
-      {/* HEADER */}
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <header className="bg-slate-950 text-white sticky top-0 z-40 shadow-lg">
+
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
           <div>
+
             <h1 className="font-bold text-lg">
               FAWAID ADMIN
             </h1>
@@ -477,22 +759,31 @@ export default function AdminPage() {
             <p className="text-xs text-slate-400">
               Shipping Marketplace
             </p>
+
           </div>
 
           <div className="flex gap-2">
+
+            {/* REFRESH */}
 
             <button
               onClick={loadData}
               disabled={loading}
               className="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg text-sm"
+              title="Refresh"
             >
               🔄
             </button>
 
+            {/* LOGOUT */}
+
             <button
               onClick={() => {
+
                 setLoggedIn(false);
                 setPassword("");
+                setMessage("");
+
               }}
               className="bg-red-500 hover:bg-red-600 px-3 py-2 rounded-lg text-sm font-semibold"
             >
@@ -500,28 +791,38 @@ export default function AdminPage() {
             </button>
 
           </div>
+
         </div>
+
       </header>
 
-      {/* CONTENT */}
+      {/* =================================================
+          CONTENT
+      ================================================= */}
 
       <div className="max-w-7xl mx-auto px-4 py-6">
 
         {/* TITLE */}
 
         <div className="mb-5">
+
           <h2 className="text-2xl font-bold text-slate-900">
             Market Management
           </h2>
 
           <p className="text-sm text-slate-500 mt-1">
-            Kelola OPEN VESSEL dan DATA MARKET dari sini.
+            Kelola OPEN VESSEL dan DATA MARKET.
           </p>
+
         </div>
 
-        {/* TABS */}
+        {/* =================================================
+            TABS
+        ================================================= */}
 
         <div className="bg-white rounded-2xl p-2 shadow-sm flex gap-2 mb-6">
+
+          {/* VESSEL */}
 
           <button
             onClick={() =>
@@ -536,6 +837,8 @@ export default function AdminPage() {
             🚢 VESSEL
           </button>
 
+          {/* CARGO */}
+
           <button
             onClick={() =>
               setTab("CARGO")
@@ -546,29 +849,37 @@ export default function AdminPage() {
                 : "text-slate-600 hover:bg-slate-100"
             }`}
           >
-            📦 CARGO
+            📦 DATA MARKET
           </button>
 
         </div>
 
-        {/* MESSAGE */}
+        {/* =================================================
+            MESSAGE
+        ================================================= */}
 
         {message && (
+
           <div className="bg-white border border-slate-200 rounded-xl px-4 py-3 mb-5 text-sm font-medium text-slate-700">
             {message}
           </div>
+
         )}
 
-        {/* ===================== */}
-        {/* VESSEL */}
-        {/* ===================== */}
+        {/* =================================================
+            VESSEL SECTION
+        ================================================= */}
 
         {tab === "VESSEL" && (
+
           <section>
+
+            {/* HEADER */}
 
             <div className="flex items-center justify-between mb-4">
 
               <div>
+
                 <h3 className="text-xl font-bold text-slate-900">
                   OPEN VESSEL
                 </h3>
@@ -576,10 +887,13 @@ export default function AdminPage() {
                 <p className="text-sm text-slate-500">
                   {vessels.length} vessel
                 </p>
+
               </div>
 
               <button
-                onClick={openAddVessel}
+                onClick={
+                  openAddVessel
+                }
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-3 rounded-xl text-sm"
               >
                 + ADD VESSEL
@@ -587,19 +901,30 @@ export default function AdminPage() {
 
             </div>
 
+            {/* LOADING */}
+
             {loading ? (
+
               <div className="bg-white rounded-2xl p-8 text-center text-slate-500">
                 Loading vessel...
               </div>
+
             ) : vessels.length === 0 ? (
+
               <div className="bg-white rounded-2xl p-8 text-center text-slate-500">
                 Belum ada vessel.
               </div>
+
             ) : (
+
               <div className="grid gap-4">
 
                 {vessels.map(
-                  (item, index) => (
+                  (
+                    item,
+                    index
+                  ) => (
+
                     <div
                       key={
                         item._row ||
@@ -610,64 +935,95 @@ export default function AdminPage() {
 
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
+                        {/* INFO */}
+
                         <div className="flex-1">
 
                           <div className="flex flex-wrap items-center gap-2 mb-2">
 
                             <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                              {item.TYPE || "-"}
+                              {item.TYPE ||
+                                "-"}
                             </span>
 
                             <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                              {item.SIZE || "-"}
+                              {item.SIZE ||
+                                "-"}
                             </span>
 
                           </div>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
 
+                            {/* POSITION */}
+
                             <div>
+
                               <span className="text-slate-400">
                                 Position
                               </span>
 
                               <p className="font-semibold text-slate-900">
-                                {item.POSITION || "-"}
+                                {item.POSITION ||
+                                  "-"}
                               </p>
+
                             </div>
 
+                            {/* AVAILABLE */}
+
                             <div>
+
                               <span className="text-slate-400">
                                 Available
                               </span>
 
                               <p className="font-semibold text-slate-900">
-                                {item["AVAILABLE DATE"] || "-"}
+                                {item[
+                                  "AVAILABLE DATE"
+                                ] ||
+                                  "-"}
                               </p>
+
                             </div>
 
+                            {/* NEXT PORT */}
+
                             <div>
+
                               <span className="text-slate-400">
                                 Next Port
                               </span>
 
                               <p className="font-semibold text-slate-900">
-                                {item["NEXT PORT"] || "-"}
+                                {item[
+                                  "NEXT PORT"
+                                ] ||
+                                  "-"}
                               </p>
+
                             </div>
 
+                            {/* DATE */}
+
                             <div>
+
                               <span className="text-slate-400">
                                 Date
                               </span>
 
                               <p className="font-semibold text-slate-900">
-                                {item.DATE || "-"}
+                                {item.DATE ||
+                                  "-"}
                               </p>
+
                             </div>
 
                           </div>
+
                         </div>
+
+                        {/* ACTION */}
 
                         <div className="flex gap-2">
 
@@ -699,33 +1055,42 @@ export default function AdminPage() {
                         </div>
 
                       </div>
+
                     </div>
+
                   )
                 )}
 
               </div>
+
             )}
 
           </section>
+
         )}
 
-        {/* ===================== */}
-        {/* CARGO */}
-        {/* ===================== */}
+        {/* =================================================
+            DATA MARKET SECTION
+        ================================================= */}
 
         {tab === "CARGO" && (
+
           <section>
+
+            {/* HEADER */}
 
             <div className="flex items-center justify-between mb-4">
 
               <div>
+
                 <h3 className="text-xl font-bold text-slate-900">
-                  DATA MARKET / CARGO
+                  DATA MARKET
                 </h3>
 
                 <p className="text-sm text-slate-500">
                   {cargo.length} cargo
                 </p>
+
               </div>
 
               <button
@@ -739,19 +1104,30 @@ export default function AdminPage() {
 
             </div>
 
+            {/* LOADING */}
+
             {loading ? (
+
               <div className="bg-white rounded-2xl p-8 text-center text-slate-500">
-                Loading cargo...
+                Loading DATA MARKET...
               </div>
+
             ) : cargo.length === 0 ? (
+
               <div className="bg-white rounded-2xl p-8 text-center text-slate-500">
-                Belum ada cargo.
+                Belum ada data cargo.
               </div>
+
             ) : (
+
               <div className="grid gap-4">
 
                 {cargo.map(
-                  (item, index) => (
+                  (
+                    item,
+                    index
+                  ) => (
+
                     <div
                       key={
                         item.ID ||
@@ -760,199 +1136,297 @@ export default function AdminPage() {
                       className="bg-white rounded-2xl shadow-sm border border-slate-200 p-4"
                     >
 
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                      <div className="flex flex-col gap-4">
 
-                        <div className="flex-1">
+                        {/* TOP */}
 
-                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+
+                          <div className="flex flex-wrap items-center gap-2">
+
+                            {/* ID */}
+
+                            <span className="bg-slate-900 text-white px-2.5 py-1 rounded-full text-xs font-bold">
+                              ID #
+                              {item.ID ||
+                                "-"}
+                            </span>
+
+                            {/* CARGO */}
 
                             <span className="bg-orange-100 text-orange-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                              {item.CARGO || "-"}
+                              {item.CARGO ||
+                                "-"}
                             </span>
 
-                            <span className="bg-slate-100 text-slate-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                              {item.SIZE_BARGE || "-"}
+                            {/* SIZE */}
+
+                            <span className="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                              {item.SIZE_BARGE ||
+                                "-"}
                             </span>
 
-                            <span className="bg-green-100 text-green-700 px-2.5 py-1 rounded-full text-xs font-bold">
-                              {item.STATUS || "-"}
+                            {/* STATUS */}
+
+                            <span
+                              className={`px-2.5 py-1 rounded-full text-xs font-bold ${
+                                item.STATUS ===
+                                "OPEN"
+                                  ? "bg-green-100 text-green-700"
+                                  : item.STATUS ===
+                                    "PENDING"
+                                  ? "bg-yellow-100 text-yellow-700"
+                                  : "bg-red-100 text-red-700"
+                              }`}
+                            >
+                              {item.STATUS ||
+                                "-"}
                             </span>
 
                           </div>
 
-                          <div className="text-lg font-bold text-slate-900 mb-2">
+                          {/* ACTION */}
 
-                            {item.POL || "-"}
+                          <div className="flex gap-2">
 
-                            <span className="mx-2 text-slate-400">
-                              →
-                            </span>
+                            <button
+                              onClick={() =>
+                                openEditCargo(
+                                  item
+                                )
+                              }
+                              className="flex-1 md:flex-none bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold"
+                            >
+                              ✏️ EDIT
+                            </button>
 
-                            {item.POD || "-"}
-
-                          </div>
-
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-
-                            <div>
-                              <span className="text-slate-400">
-                                ID
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.ID || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Company
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.NAMA_PT || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Sales Maestro
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.SALES_MAESTRO || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                From
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.FROM || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Area POL
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.AREA_POL || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Distance
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.DISTANCE || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Freight
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.FREIGHT_SHIPPER || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Laycan
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.LAYCAN || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Payment
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.PAYMENT || "-"}
-                              </p>
-                            </div>
-
-                            <div>
-                              <span className="text-slate-400">
-                                Remark
-                              </span>
-
-                              <p className="font-semibold text-slate-900">
-                                {item.REMARKS || "-"}
-                              </p>
-                            </div>
+                            <button
+                              onClick={() =>
+                                deleteCargo(
+                                  item
+                                )
+                              }
+                              disabled={
+                                saving
+                              }
+                              className="flex-1 md:flex-none bg-red-100 text-red-600 px-4 py-2.5 rounded-xl text-sm font-bold"
+                            >
+                              🗑️ DELETE
+                            </button>
 
                           </div>
 
                         </div>
 
-                        <div className="flex gap-2">
+                        {/* ROUTE */}
 
-                          <button
-                            onClick={() =>
-                              openEditCargo(
-                                item
-                              )
-                            }
-                            className="flex-1 md:flex-none bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-bold"
-                          >
-                            ✏️ EDIT
-                          </button>
+                        <div>
 
-                          <button
-                            onClick={() =>
-                              deleteCargo(
-                                item
-                              )
+                          <p className="text-xl font-bold text-slate-900">
+
+                            {item.POL ||
+                              "-"}
+
+                            <span className="mx-2 text-slate-400">
+                              →
+                            </span>
+
+                            {item.POD ||
+                              "-"}
+
+                          </p>
+
+                        </div>
+
+                        {/* DATA GRID */}
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+
+                          {/* DATE */}
+
+                          <Info
+                            label="DATE"
+                            value={
+                              item.DATE
                             }
-                            disabled={
-                              saving
+                          />
+
+                          {/* SALES */}
+
+                          <Info
+                            label="SALES MAESTRO"
+                            value={
+                              item.SALES_MAESTRO
                             }
-                            className="flex-1 md:flex-none bg-red-100 text-red-600 px-4 py-2.5 rounded-xl text-sm font-bold"
-                          >
-                            🗑️ DELETE
-                          </button>
+                          />
+
+                          {/* NAMA PT */}
+
+                          <Info
+                            label="NAMA PT"
+                            value={
+                              item.NAMA_PT
+                            }
+                          />
+
+                          {/* PIC */}
+
+                          <Info
+                            label="PIC"
+                            value={
+                              item.PIC
+                            }
+                          />
+
+                          {/* KEC */}
+
+                          <Info
+                            label="KEC"
+                            value={
+                              item.KEC
+                            }
+                          />
+
+                          {/* KAB */}
+
+                          <Info
+                            label="KAB"
+                            value={
+                              item.KAB
+                            }
+                          />
+
+                          {/* FROM */}
+
+                          <Info
+                            label="FROM"
+                            value={
+                              item.FROM
+                            }
+                          />
+
+                          {/* AREA */}
+
+                          <Info
+                            label="AREA POL"
+                            value={
+                              item.AREA_POL
+                            }
+                          />
+
+                          {/* DISTANCE */}
+
+                          <Info
+                            label="DISTANCE"
+                            value={
+                              item.DISTANCE
+                            }
+                          />
+
+                          {/* FREIGHT */}
+
+                          <Info
+                            label="FREIGHT SHIPPER"
+                            value={
+                              item.FREIGHT_SHIPPER
+                            }
+                          />
+
+                          {/* LAYCAN */}
+
+                          <Info
+                            label="LAYCAN"
+                            value={
+                              item.LAYCAN
+                            }
+                          />
+
+                          {/* PRORATE */}
+
+                          <Info
+                            label="PRORATE"
+                            value={
+                              item.PRORATE
+                            }
+                          />
+
+                          {/* DEMURRAGE */}
+
+                          <Info
+                            label="DEMURRAGE"
+                            value={
+                              item.DEMURRAGE
+                            }
+                          />
+
+                          {/* PAYMENT */}
+
+                          <Info
+                            label="PAYMENT"
+                            value={
+                              item.PAYMENT
+                            }
+                          />
+
+                          {/* OUT FEE */}
+
+                          <Info
+                            label="OUT FEE"
+                            value={
+                              item.OUT_FEE
+                            }
+                          />
+
+                        </div>
+
+                        {/* REMARKS */}
+
+                        <div className="bg-slate-50 rounded-xl p-3">
+
+                          <span className="text-xs text-slate-400 font-semibold">
+                            REMARKS / NOTE
+                          </span>
+
+                          <p className="text-sm font-semibold text-slate-900 mt-1 whitespace-pre-wrap">
+                            {item.REMARKS ||
+                              "-"}
+                          </p>
 
                         </div>
 
                       </div>
 
                     </div>
+
                   )
                 )}
 
               </div>
+
             )}
 
           </section>
+
         )}
 
       </div>
 
-      {/* ===================== */}
-      {/* VESSEL MODAL */}
-      {/* ===================== */}
+      {/* =================================================
+          VESSEL MODAL
+      ================================================= */}
 
       {showVesselForm && (
+
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
 
           <div className="bg-white w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl p-5">
 
+            {/* HEADER */}
+
             <div className="flex items-center justify-between mb-5">
 
               <div>
+
                 <h3 className="text-xl font-bold text-slate-900">
                   {editingVessel
                     ? "Edit Vessel"
@@ -962,6 +1436,7 @@ export default function AdminPage() {
                 <p className="text-sm text-slate-500">
                   Isi informasi vessel
                 </p>
+
               </div>
 
               <button
@@ -977,7 +1452,11 @@ export default function AdminPage() {
 
             </div>
 
+            {/* FORM */}
+
             <div className="grid gap-4">
+
+              {/* DATE */}
 
               <Input
                 label="DATE"
@@ -991,6 +1470,8 @@ export default function AdminPage() {
                   })
                 }
               />
+
+              {/* TYPE */}
 
               <Select
                 label="TYPE"
@@ -1009,6 +1490,8 @@ export default function AdminPage() {
                 }
               />
 
+              {/* SIZE */}
+
               <Input
                 label="SIZE"
                 value={
@@ -1023,6 +1506,8 @@ export default function AdminPage() {
                 placeholder="Contoh: 300 FT"
               />
 
+              {/* POSITION */}
+
               <Input
                 label="POSITION"
                 value={
@@ -1035,6 +1520,8 @@ export default function AdminPage() {
                   })
                 }
               />
+
+              {/* AVAILABLE DATE */}
 
               <Input
                 label="AVAILABLE DATE"
@@ -1052,6 +1539,8 @@ export default function AdminPage() {
                 }
               />
 
+              {/* NEXT PORT */}
+
               <Input
                 label="NEXT PORT"
                 value={
@@ -1068,6 +1557,8 @@ export default function AdminPage() {
                 }
               />
 
+              {/* INQUIRY */}
+
               <Input
                 label="INQUIRY"
                 value={
@@ -1081,6 +1572,8 @@ export default function AdminPage() {
                 }
                 placeholder="Nomor / link WhatsApp"
               />
+
+              {/* SAVE */}
 
               <button
                 onClick={
@@ -1097,22 +1590,29 @@ export default function AdminPage() {
               </button>
 
             </div>
+
           </div>
+
         </div>
+
       )}
 
-      {/* ===================== */}
-      {/* CARGO MODAL */}
-      {/* ===================== */}
+      {/* =================================================
+          CARGO MODAL
+      ================================================= */}
 
       {showCargoForm && (
+
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
 
-          <div className="bg-white w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-3xl p-5">
+          <div className="bg-white w-full max-w-4xl max-h-[92vh] overflow-y-auto rounded-3xl p-5">
+
+            {/* HEADER */}
 
             <div className="flex items-center justify-between mb-5">
 
               <div>
+
                 <h3 className="text-xl font-bold text-slate-900">
                   {editingCargo
                     ? "Edit Cargo"
@@ -1122,6 +1622,7 @@ export default function AdminPage() {
                 <p className="text-sm text-slate-500">
                   DATA MARKET — Master Cargo
                 </p>
+
               </div>
 
               <button
@@ -1137,9 +1638,15 @@ export default function AdminPage() {
 
             </div>
 
+            {/* =================================================
+                FORM GRID
+            ================================================= */}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-              {/* ID */}
+              {/* =================================================
+                  A - ID
+              ================================================= */}
 
               <Input
                 label="ID"
@@ -1150,11 +1657,14 @@ export default function AdminPage() {
                 placeholder={
                   editingCargo
                     ? "ID Cargo"
-                    : "Otomatis"
+                    : "Otomatis oleh sistem"
                 }
+                disabled
               />
 
-              {/* DATE */}
+              {/* =================================================
+                  B - DATE
+              ================================================= */}
 
               <Input
                 label="DATE"
@@ -1169,7 +1679,9 @@ export default function AdminPage() {
                 }
               />
 
-              {/* SALES MAESTRO */}
+              {/* =================================================
+                  C - SALES MAESTRO
+              ================================================= */}
 
               <Input
                 label="SALES MAESTRO"
@@ -1183,9 +1695,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
+                placeholder="Nama sales"
               />
 
-              {/* NAMA PT */}
+              {/* =================================================
+                  D - NAMA PT
+              ================================================= */}
 
               <Input
                 label="NAMA PT"
@@ -1199,9 +1714,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
+                placeholder="Nama perusahaan"
               />
 
-              {/* KEC */}
+              {/* =================================================
+                  E - KEC
+              ================================================= */}
 
               <Input
                 label="KEC"
@@ -1214,9 +1732,12 @@ export default function AdminPage() {
                     KEC: value,
                   })
                 }
+                placeholder="Kecamatan"
               />
 
-              {/* KAB */}
+              {/* =================================================
+                  F - KAB
+              ================================================= */}
 
               <Input
                 label="KAB"
@@ -1229,15 +1750,45 @@ export default function AdminPage() {
                     KAB: value,
                   })
                 }
+                placeholder="Kabupaten"
               />
 
-              {/* FROM */}
+              {/* =================================================
+                  G - PIC
+              ================================================= */}
 
               <Input
+                label="PIC"
+                value={
+                  cargoForm.PIC
+                }
+                onChange={(value) =>
+                  setCargoForm({
+                    ...cargoForm,
+                    PIC: value,
+                  })
+                }
+                placeholder="PIC / contact"
+              />
+
+              {/* =================================================
+                  H - FROM
+              ================================================= */}
+
+              <Select
                 label="FROM"
                 value={
                   cargoForm.FROM
                 }
+                options={[
+                  "Shipper",
+                  "Broker",
+                  "Trader",
+                  "Mining",
+                  "Shipping",
+                  "Owner",
+                  "Other",
+                ]}
                 onChange={(value) =>
                   setCargoForm({
                     ...cargoForm,
@@ -1246,7 +1797,9 @@ export default function AdminPage() {
                 }
               />
 
-              {/* SIZE BARGE */}
+              {/* =================================================
+                  I - SIZE BARGE
+              ================================================= */}
 
               <Input
                 label="SIZE BARGE"
@@ -1260,10 +1813,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
-                placeholder="Contoh: 300 FT"
+                placeholder="Contoh: 270 / 300 / 330"
               />
 
-              {/* AREA POL */}
+              {/* =================================================
+                  J - AREA POL
+              ================================================= */}
 
               <Input
                 label="AREA POL"
@@ -1277,9 +1832,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
+                placeholder="Contoh: Kalimantan Timur"
               />
 
-              {/* POL */}
+              {/* =================================================
+                  K - POL
+              ================================================= */}
 
               <Input
                 label="POL"
@@ -1292,9 +1850,12 @@ export default function AdminPage() {
                     POL: value,
                   })
                 }
+                placeholder="Port of Loading"
               />
 
-              {/* POD */}
+              {/* =================================================
+                  L - POD
+              ================================================= */}
 
               <Input
                 label="POD"
@@ -1307,9 +1868,12 @@ export default function AdminPage() {
                     POD: value,
                   })
                 }
+                placeholder="Port of Discharge"
               />
 
-              {/* DISTANCE */}
+              {/* =================================================
+                  M - DISTANCE
+              ================================================= */}
 
               <Input
                 label="DISTANCE"
@@ -1323,10 +1887,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
-                placeholder="Contoh: 525 NM"
+                placeholder="Contoh: 525"
               />
 
-              {/* CARGO */}
+              {/* =================================================
+                  N - CARGO
+              ================================================= */}
 
               <Select
                 label="CARGO"
@@ -1340,6 +1906,11 @@ export default function AdminPage() {
                   "SAND",
                   "SPLIT",
                   "IRON ORE",
+                  "LIMESTONE",
+                  "CEMENT",
+                  "AGGREGATE",
+                  "PALM KERNEL SHELL",
+                  "OTHER",
                 ]}
                 onChange={(value) =>
                   setCargoForm({
@@ -1349,7 +1920,9 @@ export default function AdminPage() {
                 }
               />
 
-              {/* FREIGHT */}
+              {/* =================================================
+                  O - FREIGHT SHIPPER
+              ================================================= */}
 
               <Input
                 label="FREIGHT SHIPPER"
@@ -1363,9 +1936,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
+                placeholder="Contoh: OPEN / 185.000"
               />
 
-              {/* LAYCAN */}
+              {/* =================================================
+                  P - LAYCAN
+              ================================================= */}
 
               <Input
                 label="LAYCAN"
@@ -1375,13 +1951,16 @@ export default function AdminPage() {
                 onChange={(value) =>
                   setCargoForm({
                     ...cargoForm,
-                    LAYCAN: value,
+                    LAYCAN:
+                      value,
                   })
                 }
-                placeholder="Contoh: 10-15 Sep 2026"
+                placeholder="Contoh: ASAP / 6/9/2026"
               />
 
-              {/* PRORATE */}
+              {/* =================================================
+                  Q - PRORATE
+              ================================================= */}
 
               <Input
                 label="PRORATE"
@@ -1391,12 +1970,16 @@ export default function AdminPage() {
                 onChange={(value) =>
                   setCargoForm({
                     ...cargoForm,
-                    PRORATE: value,
+                    PRORATE:
+                      value,
                   })
                 }
+                placeholder="Contoh: OPEN / COD / 10"
               />
 
-              {/* DEMURRAGE */}
+              {/* =================================================
+                  R - DEMURRAGE
+              ================================================= */}
 
               <Input
                 label="DEMURRAGE"
@@ -1410,9 +1993,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
+                placeholder="Contoh: 20"
               />
 
-              {/* PAYMENT */}
+              {/* =================================================
+                  S - PAYMENT
+              ================================================= */}
 
               <Input
                 label="PAYMENT"
@@ -1422,12 +2008,16 @@ export default function AdminPage() {
                 onChange={(value) =>
                   setCargoForm({
                     ...cargoForm,
-                    PAYMENT: value,
+                    PAYMENT:
+                      value,
                   })
                 }
+                placeholder="Contoh: 50/50"
               />
 
-              {/* OUT FEE */}
+              {/* =================================================
+                  T - OUT FEE
+              ================================================= */}
 
               <Input
                 label="OUT FEE"
@@ -1441,9 +2031,12 @@ export default function AdminPage() {
                       value,
                   })
                 }
+                placeholder="Contoh: 100% AL"
               />
 
-              {/* STATUS */}
+              {/* =================================================
+                  U - STATUS
+              ================================================= */}
 
               <Select
                 label="STATUS"
@@ -1458,12 +2051,15 @@ export default function AdminPage() {
                 onChange={(value) =>
                   setCargoForm({
                     ...cargoForm,
-                    STATUS: value,
+                    STATUS:
+                      value,
                   })
                 }
               />
 
-              {/* REMARKS */}
+              {/* =================================================
+                  V - REMARKS
+              ================================================= */}
 
               <div className="md:col-span-2">
 
@@ -1479,13 +2075,16 @@ export default function AdminPage() {
                         value,
                     })
                   }
+                  placeholder="Catatan cargo..."
                 />
 
               </div>
 
             </div>
 
-            {/* SAVE */}
+            {/* =================================================
+                SAVE BUTTON
+            ================================================= */}
 
             <button
               onClick={
@@ -1502,22 +2101,54 @@ export default function AdminPage() {
             </button>
 
           </div>
+
         </div>
+
       )}
 
     </main>
   );
 }
 
-// =========================
+
+// =====================================================
+// INFO COMPONENT
+// =====================================================
+
+function Info({
+  label,
+  value,
+}: {
+  label: string;
+  value?: string;
+}) {
+
+  return (
+    <div>
+
+      <span className="text-slate-400">
+        {label}
+      </span>
+
+      <p className="font-semibold text-slate-900 break-words">
+        {value || "-"}
+      </p>
+
+    </div>
+  );
+}
+
+
+// =====================================================
 // INPUT COMPONENT
-// =========================
+// =====================================================
 
 function Input({
   label,
   value,
   onChange,
   placeholder,
+  disabled = false,
 }: {
   label: string;
   value: string;
@@ -1525,7 +2156,9 @@ function Input({
     value: string
   ) => void;
   placeholder?: string;
+  disabled?: boolean;
 }) {
+
   return (
     <div>
 
@@ -1535,6 +2168,7 @@ function Input({
 
       <input
         value={value || ""}
+        disabled={disabled}
         onChange={(e) =>
           onChange(
             e.target.value
@@ -1543,16 +2177,21 @@ function Input({
         placeholder={
           placeholder
         }
-        className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:ring-2 focus:ring-blue-500"
+        className={`w-full rounded-xl border px-4 py-3 text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 ${
+          disabled
+            ? "bg-slate-100 cursor-not-allowed text-slate-500"
+            : "border-slate-300 bg-white"
+        }`}
       />
 
     </div>
   );
 }
 
-// =========================
+
+// =====================================================
 // SELECT COMPONENT
-// =========================
+// =====================================================
 
 function Select({
   label,
@@ -1567,6 +2206,7 @@ function Select({
     value: string
   ) => void;
 }) {
+
   return (
     <div>
 
@@ -1590,12 +2230,14 @@ function Select({
 
         {options.map(
           (option) => (
+
             <option
               key={option}
               value={option}
             >
               {option}
             </option>
+
           )
         )}
 
@@ -1605,21 +2247,25 @@ function Select({
   );
 }
 
-// =========================
+
+// =====================================================
 // TEXTAREA COMPONENT
-// =========================
+// =====================================================
 
 function Textarea({
   label,
   value,
   onChange,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (
     value: string
   ) => void;
+  placeholder?: string;
 }) {
+
   return (
     <div>
 
@@ -1633,6 +2279,9 @@ function Textarea({
           onChange(
             e.target.value
           )
+        }
+        placeholder={
+          placeholder
         }
         rows={4}
         className="w-full rounded-xl border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
