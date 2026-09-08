@@ -588,6 +588,195 @@ Thank you.`;
 
   </section>
 )}
+
+
+      {/* ===================================================== */}
+      {/* OFFER VESSEL FORM */}
+      {/* ===================================================== */}
+
+      {showVesselForm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setShowVesselForm(false)}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl md:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6 flex items-start justify-between">
+              <div>
+                <h2 className="text-2xl font-extrabold text-[#0B3D68]">🚢 OFFER VESSEL</h2>
+                <p className="mt-1 text-sm text-gray-500">Submit your vessel to the FMLS market</p>
+              </div>
+              <button type="button" onClick={() => setShowVesselForm(false)}
+                className="rounded-xl bg-gray-100 px-4 py-2 font-bold text-gray-600 hover:bg-gray-200">
+                ✕
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {[
+                ["Company", vesselCompany, setVesselCompany, "Company name"],
+                ["Vessel Type", vesselType, setVesselType, "Tug / Barge / TB / BG"],
+                ["Size", vesselSize, setVesselSize, "300 FT / 330 FT"],
+                ["Position", vesselPosition, setVesselPosition, "Current vessel position"],
+                ["Available Date", vesselAvailable, setVesselAvailable, "12 September 2026"],
+                ["Next Port", vesselNextPort, setVesselNextPort, "Next port"],
+              ].map(([label, value, setter, placeholder]) => (
+                <div key={label as string}>
+                  <label className="mb-1 block text-sm font-bold text-gray-700">{label as string}</label>
+                  <input
+                    type="text"
+                    value={value as string}
+                    onChange={(e) => (setter as (v: string) => void)(e.target.value)}
+                    placeholder={placeholder as string}
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 outline-none focus:border-[#0B3D68] focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+              ))}
+
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-bold text-gray-700">WhatsApp Number</label>
+                <input type="tel" value={vesselWhatsapp}
+                  onChange={(e) => setVesselWhatsapp(e.target.value)}
+                  placeholder="08xxxxxxxxxx"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 outline-none focus:border-[#0B3D68] focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button type="button" onClick={() => setShowVesselForm(false)}
+                className="rounded-xl bg-gray-200 px-6 py-3 font-bold text-gray-700 hover:bg-gray-300">
+                Cancel
+              </button>
+              <button type="button"
+                onClick={() => {
+                  if (!vesselCompany.trim() || !vesselType.trim() || !vesselSize.trim() ||
+                      !vesselPosition.trim() || !vesselAvailable.trim() || !vesselWhatsapp.trim()) {
+                    alert("Please complete Company, Vessel Type, Size, Position, Available Date and WhatsApp.");
+                    return;
+                  }
+
+                  const message = `🚢 OFFER VESSEL FMLS
+
+Company      : ${vesselCompany}
+Vessel Type  : ${vesselType}
+Size         : ${vesselSize}
+Position     : ${vesselPosition}
+Available    : ${vesselAvailable}
+Next Port    : ${vesselNextPort || "-"}
+WhatsApp     : ${vesselWhatsapp}
+
+I would like to offer this vessel to the FMLS market.`;
+
+                  const whatsappUrl = `https://wa.me/6285222124545?text=${encodeURIComponent(message)}`;
+                  window.open(whatsappUrl, "_blank");
+                  setShowVesselForm(false);
+                }}
+                className="rounded-xl bg-[#0B3D68] px-6 py-3 font-bold text-white shadow-md hover:bg-[#0F4C81]">
+                💬 SEND OFFER
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===================================================== */}
+      {/* OFFER CARGO FORM */}
+      {/* ===================================================== */}
+
+      {showCargoForm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
+          onClick={() => setShowCargoForm(false)}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl md:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6 flex items-start justify-between">
+              <div>
+                <h2 className="text-2xl font-extrabold text-[#0B3D68]">📦 OFFER CARGO</h2>
+                <p className="mt-1 text-sm text-gray-500">Submit your cargo to the FMLS market</p>
+              </div>
+              <button type="button" onClick={() => setShowCargoForm(false)}
+                className="rounded-xl bg-gray-100 px-4 py-2 font-bold text-gray-600 hover:bg-gray-200">
+                ✕
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {[
+                ["Company", cargoCompany, setCargoCompany, "Company name"],
+                ["Vessel Type", cargoVesselType, setCargoVesselType, "Tug / Barge / TB / BG"],
+                ["Cargo Type", cargoType, setCargoType, "Coal / Split / Sand / Bauxite"],
+                ["Size", cargoSize, setCargoSize, "300 FT / 330 FT"],
+                ["POL", cargoPOL, setCargoPOL, "Port of Loading"],
+                ["POD", cargoPOD, setCargoPOD, "Port of Discharge"],
+                ["Laycan", cargoLaycan, setCargoLaycan, "12 September 2026"],
+                ["Freight / Budget", cargoFreight, setCargoFreight, "190K/M3 Exclud PPN"],
+              ].map(([label, value, setter, placeholder]) => (
+                <div key={label as string}>
+                  <label className="mb-1 block text-sm font-bold text-gray-700">{label as string}</label>
+                  <input
+                    type="text"
+                    value={value as string}
+                    onChange={(e) => (setter as (v: string) => void)(e.target.value)}
+                    placeholder={placeholder as string}
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 outline-none focus:border-[#0B3D68] focus:ring-2 focus:ring-blue-100"
+                  />
+                </div>
+              ))}
+
+              <div className="md:col-span-2">
+                <label className="mb-1 block text-sm font-bold text-gray-700">WhatsApp Number</label>
+                <input type="tel" value={cargoWhatsapp}
+                  onChange={(e) => setCargoWhatsapp(e.target.value)}
+                  placeholder="08xxxxxxxxxx"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-3 text-gray-900 outline-none focus:border-[#0B3D68] focus:ring-2 focus:ring-blue-100"
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button type="button" onClick={() => setShowCargoForm(false)}
+                className="rounded-xl bg-gray-200 px-6 py-3 font-bold text-gray-700 hover:bg-gray-300">
+                Cancel
+              </button>
+              <button type="button"
+                onClick={() => {
+                  if (!cargoCompany.trim() || !cargoType.trim() || !cargoSize.trim() ||
+                      !cargoPOL.trim() || !cargoPOD.trim() || !cargoLaycan.trim() || !cargoWhatsapp.trim()) {
+                    alert("Please complete Company, Cargo Type, Size, POL, POD, Laycan and WhatsApp.");
+                    return;
+                  }
+
+                  const message = `📦 OFFER CARGO FMLS
+
+Company        : ${cargoCompany}
+Vessel Type    : ${cargoVesselType || "-"}
+Cargo          : ${cargoType}
+Size           : ${cargoSize}
+Route          : ${cargoPOL} → ${cargoPOD}
+Laycan         : ${cargoLaycan}
+Budget Shipper : ${cargoFreight || "-"}
+WhatsApp       : ${cargoWhatsapp}
+
+I would like to offer this cargo to the FMLS market.`;
+
+                  const whatsappUrl = `https://wa.me/6285222124545?text=${encodeURIComponent(message)}`;
+                  window.open(whatsappUrl, "_blank");
+                  setShowCargoForm(false);
+                }}
+                className="rounded-xl bg-[#0B3D68] px-6 py-3 font-bold text-white shadow-md hover:bg-[#0F4C81]">
+                💬 SEND OFFER
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
 </main>
   );
 }
