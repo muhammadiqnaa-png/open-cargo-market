@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CargoCard from "./components/CargoCard";
+import NotificationButton from "./components/NotificationButton";
 
 type Cargo = {
   ID: string;
@@ -147,6 +148,10 @@ export default function Home() {
             Find available vessel and cargo quickly and connect directly
             with shipping market across Indonesia.
           </p>
+
+          <div className="mt-6 flex justify-center">
+            <NotificationButton />
+          </div>
 
           <div className="mt-10 grid grid-cols-3 gap-4 md:gap-6">
 
