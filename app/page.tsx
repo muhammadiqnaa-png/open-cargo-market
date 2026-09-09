@@ -136,13 +136,13 @@ export default function Home() {
 
         <div className="mx-auto max-w-7xl px-6 py-14">
         
-          <h1 className="flex items-center justify-center gap-4 text-center text-4xl font-extrabold tracking-wide md:text-6xl">
+          <h1 className="flex flex-nowrap items-center justify-center gap-2 text-center text-2xl font-extrabold tracking-wide whitespace-nowrap sm:gap-3 sm:text-4xl md:gap-4 md:text-6xl">
             <img
               src="/icon-512.png"
               alt="Fawaid"
-              className="h-16 w-16 rounded-2xl object-contain md:h-20 md:w-20"
+              className="h-12 w-12 shrink-0 rounded-xl object-contain sm:h-14 sm:w-14 md:h-20 md:w-20"
             />
-            AVAILABLE MARKET
+            <span>AVAILABLE MARKET</span>
           </h1>
 
           <p className="mt-4 text-center text-xl font-semibold text-slate-300">
